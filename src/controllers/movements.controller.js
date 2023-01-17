@@ -21,6 +21,7 @@ export const createMovement = async (req, res) => {
     });
     return res.status(200).json({ message: "movement created successfully" });
   } catch (error) {
+    console.error(error);
     return res.status(500).json({ message: "error creating movement" });
   }
 };
