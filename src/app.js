@@ -17,7 +17,4 @@ app.use(users_router)
 app.use(plataforms_router)
 app.use(stores_router)
 app.use(dashboard_router)
-app.get('/',(req, res)=>{
-    res.json({hola:'perro'})
-})
 export default app;
