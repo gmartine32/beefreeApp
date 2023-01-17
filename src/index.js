@@ -15,7 +15,7 @@ const main = async () => {
 
  
     app.listen(5000);
-    console.log("Contectado pai2");
+    console.log("Contectado a productivo xd");
   } catch (error) {
     console.log(error);
   }
