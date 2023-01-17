@@ -14,7 +14,7 @@ const main = async () => {
     console.log("Conectado a la base de datos");
 
  
-    app.listen(5000);
+    app.listen(process.env.PORT);
     console.log("Contectado a productivo xd");
   } catch (error) {
     console.log(error);
