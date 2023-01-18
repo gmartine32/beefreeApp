@@ -13,7 +13,7 @@ import './models/movement.js'
 
 const main = async () => {
   try {
-    await sequelize.sync({force: true})
+    await sequelize.sync({force: false})
     console.log("Conectado a la base de datos");
 
  

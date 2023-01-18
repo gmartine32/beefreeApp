@@ -13,7 +13,7 @@ import {
   getMovementsToday,
 } from "./movements.controller.js";
 import { parseQuery } from "../libraries/tools/sql.tools.js";
-import { MOVEMENT_TYPE } from "../libraries/constants/movement.constants.js";
+import { MOVEMENT_TYPE, responseWeekChart } from "../libraries/constants/movement.constants.js";
 
 export const getIndicatorsAll = async (_req, res) => {
   try {
@@ -79,19 +79,26 @@ export const getIndicatorsStore = async (req, res) => {
 export const getIncomeChartDataWeek = async (req, res) => {
   try {
     const data = await getIncomesValuesByWeek();
-    console.log(data);
-    return res.status(200).json(data);
+    console.log("AAAAAAAAAAAAAAAAAAAAA",data);
+    return res.status(200).json(parseDataChartWeek(data));
   } catch (error) {
     return res.status(500).json({ message: "error getting data" });
   }
 };
+ export const parseDataChartWeek = (data)=>{
+  
+  const newResponse = [...responseWeekChart]
+  data.forEach((res)=>newResponse[res.dayOfWeek]={"movementValueSum":res.movementValueSum, "dayOfWeek":res.dayOfWeek})
 
+  return newResponse
+
+ }
 export const getIncomeStoreChartDataWeek = async (req, res) => {
   try {
     const { id_store } = { ...req.params };
     const data = await getIncomesStoreValuesByWeek(id_store);
     console.log(data);
-    return res.status(200).json(data);
+    return res.status(200).json(parseDataChartWeek(data));
   } catch (error) {
     return res.status(500).json({ message: "error getting data" });
   }
@@ -100,7 +107,7 @@ export const getCostsChartDataWeek = async (req, res) => {
   try {
     const data = await getCostsValuesByWeek();
     console.log(data);
-    return res.status(200).json(data);
+    return res.status(200).json(parseDataChartWeek(data));
   } catch (error) {
     return res.status(500).json({ message: "error getting data" });
   }
@@ -111,7 +118,7 @@ export const getCostsStoreChartDataWeek = async (req, res) => {
     const { id_store } = { ...req.params };
     const data = await getCostsStoreValuesByWeek(id_store);
     console.log(data);
-    return res.status(200).json(data);
+    return res.status(200).json(parseDataChartWeek(data));
   } catch (error) {
     return res.status(500).json({ message: "error getting data" });
   }
