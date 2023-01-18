@@ -1,4 +1,6 @@
 import { User } from "../models/user.js";
+import jwt from 'jsonwebtoken'
+import { parseQuery } from "../libraries/tools/sql.tools.js";
 
 export const createUser = async (req, res) => {
   try {
@@ -89,14 +91,18 @@ export const authUser = async (req, res) => {
         username
       }
     })
-    console.log(user);
     if (!user) return res.status(404).json({ message: "Username not registered" });
     if(user.password != password) return res.status(401).json({message: "Incorrect password"})
-
-    res.status(202).json(user)
+    const token = generateToken(parseQuery( user))
+    res.status(202).json({token:token, user:user})
   } catch (error) {
+    console.log(error)
     res.status(500).json({ message: "Technical error" });
   }
+}
+
+const generateToken = (user)=>{
+  return jwt.sign( user,process.env.PASSWORD_SICRET,{expiresIn:'15m'})
 }
 export const validateUsername = async (username) => {
   const users = await User.findOne({where: {username: username}});
