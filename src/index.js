@@ -20,7 +20,7 @@ const main = async () => {
     app.listen(process.env.PORT);
     console.log("Contectado a productivo xd",process.env.PORT);
   } catch (error) {
-    console.log(error);
+    console.log('ERRROR:',error);
   }
 };
 
