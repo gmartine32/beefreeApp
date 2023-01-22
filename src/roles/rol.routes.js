@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createRol,deleteRol,getRol,getRols, updateRole } from "../controllers/rol.controller.js";
+import { createRol,deleteRol,getRol,getRols, updateRole } from "./rol.controller.js";
 
 const rol_router = Router();
 

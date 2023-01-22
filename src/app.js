@@ -1,11 +1,11 @@
 import express from 'express';
 import cors from 'cors';
-import rol_router from './routes/rol.routes.js';
-import movements_router from './routes/movements.routes.js';
-import plataforms_router from './routes/plataforms.routes.js';
-import stores_router from './routes/stores.routes.js';
-import users_router from './routes/users.routes.js';
-import dashboard_router from './routes/dashboard.routes.js';
+import rol_router from './roles/rol.routes.js';
+import users_router from './users/users.routes.js';
+import dashboard_router from './dashboard/dashboard.routes.js';
+import movements_router from './movements/movements.routes.js'
+import plataforms_router from './plataforms/plataforms.routes.js';
+import stores_router from './stores/stores.routes.js'
 
 
 const app = express();

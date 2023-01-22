@@ -1,8 +1,8 @@
-import { Movement } from "../models/movement.js";
-import { Store } from "../models/store.js";
+import { Movement } from "./movement.js";
+import { Store } from "../stores/store.js";
 import moment from "moment";
 import { Op, Sequelize } from "sequelize";
-import { MOVEMENT_TYPE } from "../libraries/constants/movement.constants.js";
+import { MOVEMENT_TYPE, responseMonthChart } from "../libraries/constants/movement.constants.js";
 
 export const createMovement = async (req, res) => {
   try {
@@ -100,7 +100,15 @@ export const deleteMovement = async (req, res) => {
     return res.status(500).json({ message: "error deleting movement" });
   }
 };
-
+export const getMovementByStore = async (req, res) => {
+  try {
+    const { id_store } = {...req.params};
+    let data = await getMovementsByStore(id_store)
+return res.status(200).json(data)
+  } catch (error) {
+    return res.status(500).json({ message: "error getting movement by store" });
+  }
+}
 export const getMovementsByWeek = async () => {
   try {
     const startOfWeek = moment().startOf("week").toDate();
@@ -117,6 +125,28 @@ export const getMovementsByWeek = async () => {
     console.log("@@@@ERROR", error);
   }
 };
+ 
+
+export const getMovementsByStore =async (id_store) => {
+try {
+  const response  = await Movement.findAll({
+    where:{
+      id_store
+    },
+    include: [
+      {
+        model: Store,
+        attributes: ["name"],
+      },
+    ],
+  })
+
+  return response
+} catch (error) {
+  console.log(error)
+  return []
+}
+}
 export const getMovementsStoreByWeek = async (id_store) => {
   try {
     const startOfWeek = moment().startOf("week").toDate();
@@ -312,11 +342,56 @@ export const getCostsStoreValuesByWeek = async (id_store) => {
   }
 };
 
+export const getValuesChartDataMounth = async (id_store, type_movement) =>{
+  try {
+    
+      const startOfYear = moment().startOf('year')
+      const endOfYear = moment().endOf('year')
+      let conditions = {
+        createdAt: {
+          [Sequelize.Op.between]: [startOfYear, endOfYear],
+        },
+        type_movement: type_movement,
+        id_store,
+      }
+      if(conditions.id_store === undefined) delete conditions.id_store
+
+    const data = await Movement.findAll({
+      where: conditions,
+      attributes: [
+        [
+          Sequelize.fn("date_part", "month", Sequelize.col("createdAt")),
+          "month",
+        ],
+        [
+          Sequelize.fn("sum", Sequelize.col("movement_value")),
+          "movementValueSum",
+        ],
+      ],
+      group: [Sequelize.fn("date_part", "month", Sequelize.col("createdAt"))],
+      raw: true
+    }); 
+    console.log('dataaaa',data)
+    return parseDataChartMonth(data)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 export const filterMovementsByType = (movements, type_movement) => {
   return movements.filter(
     (movement) => movement.type_movement === type_movement
   );
 };
+
+export const parseDataChartMonth = (data)=>{
+  
+  const newResponse = [...responseMonthChart]
+  data.forEach((res)=>newResponse[res.month-1]={"movementValueSum":res.movementValueSum, "monthOfYear":res.month})
+
+  return newResponse
+
+ }
 
 export const validateMovementValue = (value) => {
   return isNaN(value) || value < 0;

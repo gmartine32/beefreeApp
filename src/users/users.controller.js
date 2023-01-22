@@ -1,4 +1,4 @@
-import { User } from "../models/user.js";
+import { User } from "./user.js";
 import jwt from 'jsonwebtoken'
 import { parseQuery } from "../libraries/tools/sql.tools.js";
 

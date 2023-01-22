@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../database/database.js";
-import {User} from './user.js'
-import {Store} from './store.js'
+import {User} from '../users/user.js'
+import {Store} from '../stores/store.js'
 
 export const Movement = sequelize.define("movements", {
     id: {

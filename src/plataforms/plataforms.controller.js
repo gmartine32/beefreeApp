@@ -1,4 +1,5 @@
-import { Plataform } from "../models/plataform.js";
+import { Plataform } from "./plataform.js";
+import { existStoreByPlataform } from "../stores/stores.controller.js";
 
 export const createPlataform = async (req, res) => {
   try {
@@ -61,6 +62,7 @@ export const updatePlataform = async (req, res) => {
 export const deletePlataform = async (req, res) => {
   try {
     const { id } = req.params;
+    if(await existStoreByPlataform(id)) return res.status(409).json({message:'not allowed delete this plataform'})
     const plataform = await Plataform.findByPk(id);
     if (!plataform)
       return res.status(404).json({ message: "plataform not found" });

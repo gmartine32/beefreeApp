@@ -1,6 +1,6 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../database/database.js";
-import {Plataform} from './plataform.js'
+import {Plataform} from '../plataforms/plataform.js'
 export const Store = sequelize.define("store", {
     id: {
        type: DataTypes.INTEGER,

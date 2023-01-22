@@ -1,4 +1,4 @@
-import { Movement } from "../models/movement.js";
+import { Movement } from "../movements/movement.js";
 import moment from "moment";
 import { Sequelize } from "sequelize";
 import {
@@ -11,7 +11,8 @@ import {
   getMovementsStoreByWeek,
   getMovementsStoreToday,
   getMovementsToday,
-} from "./movements.controller.js";
+  getValuesChartDataMounth,
+} from "../movements/movements.controller.js";
 import { parseQuery } from "../libraries/tools/sql.tools.js";
 import { MOVEMENT_TYPE, responseWeekChart } from "../libraries/constants/movement.constants.js";
 
@@ -123,3 +124,16 @@ export const getCostsStoreChartDataWeek = async (req, res) => {
     return res.status(500).json({ message: "error getting data" });
   }
 };
+
+
+export const getValuesChartDataMonth = async (req, res) =>{
+  try {
+    const { type_movement, id_store } = { ...req.params };
+    const data = await getValuesChartDataMounth(id_store, type_movement)
+    res.status(200).json(data);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({message:'error gettins values by months'});
+  }
+}
+

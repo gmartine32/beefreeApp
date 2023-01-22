@@ -3,11 +3,11 @@ import pkg from 'dotenv';
 
 pkg.config()
 import { sequelize } from "./database/database.js";
-import './models/rol.js'
-import './models/user.js'
-import './models/plataform.js'
-import './models/store.js'
-import './models/movement.js'
+import './roles/rol.js'
+import './users/user.js'
+import './plataforms/plataform.js'
+import './stores/store.js'
+import './movements/movement.js'
 
 
 

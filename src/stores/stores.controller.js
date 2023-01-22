@@ -1,5 +1,5 @@
-import { Plataform } from "../models/plataform.js";
-import { Store } from "../models/store.js";
+import { Plataform } from "../plataforms/plataform.js";
+import { Store } from "./store.js";
 export const createStore = async (req, res) => {
   try {
     const { name, id_plataform } = req.body;
@@ -67,6 +67,19 @@ export const updateStore = async (req, res) => {
   }
 };
 
+export const existStoreByPlataform =  async (id_plataform) => {
+  try {
+    const plataform  = await Store.findOne({
+      where:{
+        id_plataform: id_plataform
+      }
+    })
+    return plataform ? true : false  
+  } catch (error) {
+    console.log(error)
+    return false
+  }
+}
 export const deleteStore = async (req, res) => {
   try {
     const { id } = { ...req.params };

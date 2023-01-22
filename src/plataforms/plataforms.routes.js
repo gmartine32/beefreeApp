@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { deleteMovement } from "../controllers/movements.controller.js";
-import { createPlataform,deletePlataform,getPlataform,getPlataforms, updatePlataform } from "../controllers/plataforms.controller.js";
+import { deleteMovement } from "../movements/movements.controller.js";
+import { createPlataform,deletePlataform,getPlataform,getPlataforms, updatePlataform } from "./plataforms.controller.js";
 
 const plataforms_router = Router();
 
