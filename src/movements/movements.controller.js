@@ -6,7 +6,7 @@ import { MOVEMENT_TYPE, responseMonthChart } from "../libraries/constants/moveme
 
 export const createMovement = async (req, res) => {
   try {
-    const { description, type_movement, movement_value, id_user, id_store } =
+    const { description, type_movement, movement_value, id_user, id_store, createdAt } =
       req.body;
     if (validateMovementValue(movement_value))
       return res.status(400).json({ message: "invalid movement value" });
@@ -18,6 +18,7 @@ export const createMovement = async (req, res) => {
       movement_value,
       id_user,
       id_store,
+      createdAt: createdAt || new Date()
     });
     return res.status(200).json({ message: "movement created successfully" });
   } catch (error) {

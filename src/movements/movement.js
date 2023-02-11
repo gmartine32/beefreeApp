@@ -19,6 +19,8 @@ export const Movement = sequelize.define("movements", {
         },
     movement_value: {
         type: DataTypes.FLOAT,}, 
+},{
+    timestamps: true,
 });
 
 Movement.belongsTo(User,{
