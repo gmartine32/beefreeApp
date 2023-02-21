@@ -127,6 +127,70 @@ export const getMovementsByWeek = async () => {
   }
 };
  
+export const getMovementsByStoreCustomDate = async (req, res)=>{
+try {
+  const { id } = req.params;
+  const {startDate, endDate, type_movement} = req.body
+  const firstDate = moment(startDate).toDate()
+  const secondDate = moment(endDate).toDate()
+  let conditions = {
+      createdAt:{
+          [Sequelize.Op.between]: [firstDate, secondDate],
+      },
+      type_movement:type_movement
+  }
+
+  if(id != 0) conditions.id_store = id
+  const order = await Movement.findAll({
+      where:conditions,
+      include: [
+          {
+            model: Store,
+            attributes: ["name"],
+          },
+        ],
+  })
+
+  if(!order) return res.status(200).json({message:'order not found'})
+
+  return res.status(200).json(order)
+} catch (error) {
+  
+}
+}
+
+export const getMovementByStoreFilter = async (req, res) =>{
+  try {
+      const { id,filter } = req.params;
+      const {type_movement} = req.body;
+      const firstDate = moment().startOf(filter).toDate()
+      const secondDate = moment().endOf(filter).toDate()
+      const conditions={
+          createdAt:{
+              [Sequelize.Op.between]: [firstDate, secondDate],
+          },
+          type_movement:type_movement
+      }
+      if(id != 0) conditions.id_store = id
+      const order = await Movement.findAll({
+          where:conditions,
+          include: [
+              {
+                model: Store,
+                attributes: ["name"],
+              },
+            ],
+      })
+
+      if(!order) return res.status(200).json({message:'order not found'})
+
+      return res.status(200).json(order)
+  } catch (error) {
+      console.log(error)
+      return res.status(500).json({message:'error getting order'})
+  }
+
+}
 
 export const getMovementsByStore =async (id_store) => {
 try {

@@ -8,6 +8,8 @@ import './users/user.js'
 import './plataforms/plataform.js'
 import './stores/store.js'
 import './movements/movement.js'
+import './orders/order.js'
+import './stats/stats.js'
 
 
 
