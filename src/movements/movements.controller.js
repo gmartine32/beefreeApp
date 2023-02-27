@@ -443,6 +443,8 @@ export const getValuesChartDataMounth = async (id_store, type_movement) =>{
   }
 }
 
+
+
 export const filterMovementsByType = (movements, type_movement) => {
   return movements.filter(
     (movement) => movement.type_movement === type_movement
@@ -464,3 +466,39 @@ export const validateMovementValue = (value) => {
 export const validateDescription = (description) => {
   return description && description.trim() == "";
 };
+
+export const getIncomesValue = async (startDate, endDate)=>{
+  try {
+    console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+    console.log(startDate, endDate);
+   const response = await Sequelize.query(`select s."name" , sum(m.movement_value)
+    from movements m 
+    inner join stores s on s.id = m.id_store
+    where m."createdAt" <= '${endDate}' 
+    and m."createdAt" >= '${startDate}'
+    and m.type_movement = 1
+    group by m.id_store, s."name"`)
+    console.log(response)
+
+    return response
+
+  } catch (error) {
+    
+  }
+}
+
+export const getIncomesValues = async(req, res)=>{
+  try {
+    const {startDate, endDate} = req.body
+console.log('@@@ hola')
+    const firstDate = moment(startDate).toDate()
+    const secondDate = moment(endDate).toDate()
+    const data = await getIncomesValue(firstDate,secondDate)
+
+    res.status(200).json(data || [])
+    
+  } catch (error) {
+    res.status(400).json({message: error.message})
+    
+  }
+}
