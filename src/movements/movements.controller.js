@@ -3,6 +3,7 @@ import { Store } from "../stores/store.js";
 import moment from "moment";
 import { Op, Sequelize } from "sequelize";
 import { MOVEMENT_TYPE, responseMonthChart } from "../libraries/constants/movement.constants.js";
+import { parseQuery } from "../libraries/tools/sql.tools.js";
 
 export const createMovement = async (req, res) => {
   try {
@@ -469,21 +470,32 @@ export const validateDescription = (description) => {
 
 export const getIncomesValue = async (startDate, endDate)=>{
   try {
-    console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
     console.log(startDate, endDate);
-   const response = await Sequelize.query(`select s."name" , sum(m.movement_value)
-    from movements m 
-    inner join stores s on s.id = m.id_store
-    where m."createdAt" <= '${endDate}' 
-    and m."createdAt" >= '${startDate}'
-    and m.type_movement = 1
-    group by m.id_store, s."name"`)
-    console.log(response)
+   const response = await Movement.findAll({
+    attributes: [
+      [Sequelize.fn('SUM', Sequelize.col('movement_value')), 'total'],
+      'id_store',
+    ],
+    include: [
+      {
+        model: Store,
+        attributes: [],
+      },
+    ],
+    where: {
+      createdAt: {
+        [Sequelize.Op.between]: [startDate, endDate],
+      },
+      type_movement:1
+    },
+    group: ['id_store'],
+  })
+    console.log('praa',response)
 
-    return response
+    return parseQuery(response)
 
   } catch (error) {
-    
+    console.log(error)
   }
 }
 
@@ -494,7 +506,19 @@ console.log('@@@ hola')
     const firstDate = moment(startDate).toDate()
     const secondDate = moment(endDate).toDate()
     const data = await getIncomesValue(firstDate,secondDate)
+    res.status(200).json(data || [])
+  } catch (error) {
+    res.status(400).json({message: error.message})
+    
+  }
+}
 
+export const getIncomesValuesFilter = async(req, res)=>{
+  try {
+    const {filter} = req.params
+    const firstDate = moment().startOf(filter).toDate()
+    const secondDate = moment().endOf(filter).toDate()
+    const data = await getIncomesValue(firstDate,secondDate)
     res.status(200).json(data || [])
     
   } catch (error) {
