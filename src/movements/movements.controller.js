@@ -2,13 +2,22 @@ import { Movement } from "./movement.js";
 import { Store } from "../stores/store.js";
 import moment from "moment";
 import { Op, Sequelize } from "sequelize";
-import { MOVEMENT_TYPE, responseMonthChart } from "../libraries/constants/movement.constants.js";
+import {
+  MOVEMENT_TYPE,
+  responseMonthChart,
+} from "../libraries/constants/movement.constants.js";
 import { parseQuery } from "../libraries/tools/sql.tools.js";
 
 export const createMovement = async (req, res) => {
   try {
-    const { description, type_movement, movement_value, id_user, id_store, createdAt } =
-      req.body;
+    const {
+      description,
+      type_movement,
+      movement_value,
+      id_user,
+      id_store,
+      createdAt,
+    } = req.body;
     if (validateMovementValue(movement_value))
       return res.status(400).json({ message: "invalid movement value" });
     if (validateDescription(description))
@@ -19,7 +28,7 @@ export const createMovement = async (req, res) => {
       movement_value,
       id_user,
       id_store,
-      createdAt: createdAt || new Date()
+      createdAt: createdAt || new Date(),
     });
     return res.status(200).json({ message: "movement created successfully" });
   } catch (error) {
@@ -104,13 +113,13 @@ export const deleteMovement = async (req, res) => {
 };
 export const getMovementByStore = async (req, res) => {
   try {
-    const { id_store } = {...req.params};
-    let data = await getMovementsByStore(id_store)
-return res.status(200).json(data)
+    const { id_store } = { ...req.params };
+    let data = await getMovementsByStore(id_store);
+    return res.status(200).json(data);
   } catch (error) {
     return res.status(500).json({ message: "error getting movement by store" });
   }
-}
+};
 export const getMovementsByWeek = async () => {
   try {
     const startOfWeek = moment().startOf("week").toDate();
@@ -127,92 +136,91 @@ export const getMovementsByWeek = async () => {
     console.log("@@@@ERROR", error);
   }
 };
- 
-export const getMovementsByStoreCustomDate = async (req, res)=>{
-try {
-  const { id } = req.params;
-  const {startDate, endDate, type_movement} = req.body
-  const firstDate = moment(startDate).toDate()
-  const secondDate = moment(endDate).toDate()
-  let conditions = {
-      createdAt:{
-          [Sequelize.Op.between]: [firstDate, secondDate],
-      },
-      type_movement:type_movement
-  }
 
-  if(id != 0) conditions.id_store = id
-  const order = await Movement.findAll({
-      where:conditions,
-      include: [
-          {
-            model: Store,
-            attributes: ["name"],
-          },
-        ],
-  })
-
-  if(!order) return res.status(200).json({message:'order not found'})
-
-  return res.status(200).json(order)
-} catch (error) {
-  
-}
-}
-
-export const getMovementByStoreFilter = async (req, res) =>{
+export const getMovementsByStoreCustomDate = async (req, res) => {
   try {
-      const { id,filter } = req.params;
-      const {type_movement} = req.body;
-      const firstDate = moment().startOf(filter).toDate()
-      const secondDate = moment().endOf(filter).toDate()
-      const conditions={
-          createdAt:{
-              [Sequelize.Op.between]: [firstDate, secondDate],
-          },
-          type_movement:type_movement
-      }
-      if(id != 0) conditions.id_store = id
-      const order = await Movement.findAll({
-          where:conditions,
-          include: [
-              {
-                model: Store,
-                attributes: ["name"],
-              },
-            ],
-      })
+    const { id } = req.params;
+    const { startDate, endDate, type_movement } = req.body;
+    const firstDate = moment(startDate).toDate();
+    const secondDate = moment(endDate).toDate();
+    console.log("AQUIII", firstDate, secondDate);
 
-      if(!order) return res.status(200).json({message:'order not found'})
-
-      return res.status(200).json(order)
-  } catch (error) {
-      console.log(error)
-      return res.status(500).json({message:'error getting order'})
-  }
-
-}
-
-export const getMovementsByStore =async (id_store) => {
-try {
-  const response  = await Movement.findAll({
-    where:{
-      id_store
-    },
-    include: [
-      {
-        model: Store,
-        attributes: ["name"],
+    let conditions = {
+      createdAt: {
+        [Sequelize.Op.between]: [firstDate, secondDate],
       },
-    ],
-  })
+      type_movement: type_movement,
+    };
 
-  return response
-} catch (error) {
-  console.log(error)
-  return []
-}
-}
+    if (id != 0) conditions.id_store = id;
+    const order = await Movement.findAll({
+      where: conditions,
+      include: [
+        {
+          model: Store,
+          attributes: ["name"],
+        },
+      ],
+    });
+
+    if (!order) return res.status(200).json({ message: "order not found" });
+
+    return res.status(200).json(order);
+  } catch (error) {}
+};
+
+export const getMovementByStoreFilter = async (req, res) => {
+  try {
+    const { id, filter } = req.params;
+    const { type_movement } = req.body;
+    const firstDate = moment().startOf(filter).toDate();
+    const secondDate = moment().endOf(filter).toDate();
+    const conditions = {
+      createdAt: {
+        [Sequelize.Op.between]: [firstDate, secondDate],
+      },
+      type_movement: type_movement,
+    };
+    if (id != 0) conditions.id_store = id;
+    const order = await Movement.findAll({
+      where: conditions,
+      include: [
+        {
+          model: Store,
+          attributes: ["name"],
+        },
+      ],
+    });
+
+    if (!order) return res.status(200).json({ message: "order not found" });
+
+    return res.status(200).json(order);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "error getting order" });
+  }
+};
+
+export const getMovementsByStore = async (id_store) => {
+  try {
+    const response = await Movement.findAll({
+      where: {
+        id_store,
+      },
+      include: [
+        {
+          model: Store,
+          attributes: ["name"],
+        },
+      ],
+    });
+
+    return response;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+};
 export const getMovementsStoreByWeek = async (id_store) => {
   try {
     const startOfWeek = moment().startOf("week").toDate();
@@ -408,19 +416,18 @@ export const getCostsStoreValuesByWeek = async (id_store) => {
   }
 };
 
-export const getValuesChartDataMounth = async (id_store, type_movement) =>{
+export const getValuesChartDataMounth = async (id_store, type_movement) => {
   try {
-    
-      const startOfYear = moment().startOf('year')
-      const endOfYear = moment().endOf('year')
-      let conditions = {
-        createdAt: {
-          [Sequelize.Op.between]: [startOfYear, endOfYear],
-        },
-        type_movement: type_movement,
-        id_store,
-      }
-      if(conditions.id_store === undefined) delete conditions.id_store
+    const startOfYear = moment().startOf("year");
+    const endOfYear = moment().endOf("year");
+    let conditions = {
+      createdAt: {
+        [Sequelize.Op.between]: [startOfYear, endOfYear],
+      },
+      type_movement: type_movement,
+      id_store,
+    };
+    if (conditions.id_store === undefined) delete conditions.id_store;
 
     const data = await Movement.findAll({
       where: conditions,
@@ -435,16 +442,14 @@ export const getValuesChartDataMounth = async (id_store, type_movement) =>{
         ],
       ],
       group: [Sequelize.fn("date_part", "month", Sequelize.col("createdAt"))],
-      raw: true
-    }); 
-    console.log('dataaaa',data)
-    return parseDataChartMonth(data)
+      raw: true,
+    });
+    console.log("dataaaa", data);
+    return parseDataChartMonth(data);
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
-
-
+};
 
 export const filterMovementsByType = (movements, type_movement) => {
   return movements.filter(
@@ -452,14 +457,18 @@ export const filterMovementsByType = (movements, type_movement) => {
   );
 };
 
-export const parseDataChartMonth = (data)=>{
-  
-  const newResponse = [...responseMonthChart]
-  data.forEach((res)=>newResponse[res.month-1]={"movementValueSum":res.movementValueSum, "monthOfYear":res.month})
+export const parseDataChartMonth = (data) => {
+  const newResponse = [...responseMonthChart];
+  data.forEach(
+    (res) =>
+      (newResponse[res.month - 1] = {
+        movementValueSum: res.movementValueSum,
+        monthOfYear: res.month,
+      })
+  );
 
-  return newResponse
-
- }
+  return newResponse;
+};
 
 export const validateMovementValue = (value) => {
   return isNaN(value) || value < 0;
@@ -468,61 +477,185 @@ export const validateDescription = (description) => {
   return description && description.trim() == "";
 };
 
-export const getIncomesValue = async (startDate, endDate)=>{
+export const getIncomesValue = async (startDate, endDate) => {
   try {
     console.log(startDate, endDate);
-   const response = await Movement.findAll({
-    attributes: [
-      [Sequelize.fn('SUM', Sequelize.col('movement_value')), 'total'],
-      'id_store',
-    ],
-    include: [
-      {
-        model: Store,
-        attributes: [],
+    const response = await Movement.findAll({
+      attributes: [
+        [Sequelize.fn("SUM", Sequelize.col("movement_value")), "total"],
+        "id_store",
+      ],
+      include: [
+        {
+          model: Store,
+          attributes: [],
+        },
+      ],
+      where: {
+        createdAt: {
+          [Sequelize.Op.between]: [startDate, endDate],
+        },
+        type_movement: 1,
       },
-    ],
-    where: {
+      group: ["id_store"],
+    });
+    console.log("praa", response);
+
+    return parseQuery(response);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getIncomesValues = async (req, res) => {
+  try {
+    const { startDate, endDate } = req.body;
+    console.log("@@@ hola");
+    const firstDate = moment(startDate).toDate();
+    const secondDate = moment(endDate).toDate();
+    const data = await getIncomesValue(firstDate, secondDate);
+    res.status(200).json(data || []);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+export const getIncomesValuesFilter = async (req, res) => {
+  try {
+    const { filter } = req.params;
+    const firstDate = moment().startOf(filter).toDate();
+    const secondDate = moment().endOf(filter).toDate();
+    const data = await getIncomesValue(firstDate, secondDate);
+    res.status(200).json(data || []);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+export const getIncomebyYears = async (req, res) => {
+  try {
+    const { date, id_store } = req.body;
+    const response = await getIncomebyYear(date, id_store);
+    return res.status(200).json(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "error getting dataa" });
+  }
+};
+
+export const getIncomebyYear = async (date, id_store) => {
+  try {
+    const currentYear = new Date(date).getFullYear();
+
+    let conditions = {
+      type_movement: 1,
       createdAt: {
-        [Sequelize.Op.between]: [startDate, endDate],
+        [Op.gte]: new Date(currentYear, 0, 1),
+        [Op.lt]: new Date(currentYear + 1, 0, 1),
       },
-      type_movement:1
-    },
-    group: ['id_store'],
-  })
-    console.log('praa',response)
+    };
+    if (id_store != 0) conditions.id_store = id_store;
 
-    return parseQuery(response)
+    console.log("conditions", conditions);
+    const incomeByYearQuarter = await Movement.findAll({
+      attributes: [
+        [
+          Sequelize.fn("EXTRACT", Sequelize.literal('YEAR FROM "createdAt"')),
+          "year",
+        ],
+        [
+          Sequelize.fn(
+            "EXTRACT",
+            Sequelize.literal('QUARTER FROM "createdAt"')
+          ),
+          "quarter",
+        ],
+        [
+          Sequelize.fn("EXTRACT", Sequelize.literal('MONTH FROM "createdAt"')),
+          "month",
+        ],
+        [
+          Sequelize.fn("SUM", Sequelize.col("movement_value")),
+          "total_movement_value",
+        ],
+      ],
+      where: conditions,
+      group: ["year", "quarter", "month"],
+      order: [
+        ["year", "ASC"],
+        ["quarter", "ASC"],
+        ["month", "ASC"],
+      ],
+    });
+    console.log("resss", incomeByYearQuarter);
 
+    return transformData(parseQuery(incomeByYearQuarter));
   } catch (error) {
-    console.log(error)
+    console.log("jujuju", error);
+    throw new Error(error);
   }
-}
+};
 
-export const getIncomesValues = async(req, res)=>{
+const transformData = (data) => {
+  const result = [];
+
+  // Create an array of all possible quarter-month combinations
+  const quarterMonths = [1, 2, 3].flatMap((month) =>
+    [1, 2, 3, 4].map((quarter) => ({ month, quarter }))
+  );
+
+  // Loop through each quarter-month combination
+  quarterMonths.forEach(({ month, quarter }) => {
+    // Find the data object with the matching quarter and month, or create a new one with total_movement_value of 0
+    const monthData = data.find(
+      (item) => item.quarter == quarter && item.month == month
+    ) || {
+      year: data[0].year,
+      quarter,
+      month,
+      total_movement_value: 0,
+    };
+    result.push(monthData);
+  });
+
+  return result;
+};
+
+export const getIncomesCountTodayByHour = async (req, res) => {
   try {
-    const {startDate, endDate} = req.body
-console.log('@@@ hola')
-    const firstDate = moment(startDate).toDate()
-    const secondDate = moment(endDate).toDate()
-    const data = await getIncomesValue(firstDate,secondDate)
-    res.status(200).json(data || [])
-  } catch (error) {
-    res.status(400).json({message: error.message})
-    
-  }
-}
+    const {id_store} = req.params
+    const response = await getMovementByHour(id_store)
 
-export const getIncomesValuesFilter = async(req, res)=>{
-  try {
-    const {filter} = req.params
-    const firstDate = moment().startOf(filter).toDate()
-    const secondDate = moment().endOf(filter).toDate()
-    const data = await getIncomesValue(firstDate,secondDate)
-    res.status(200).json(data || [])
-    
+    return res.status(200).json(response || [])
   } catch (error) {
-    res.status(400).json({message: error.message})
-    
+    res.status(500).json({message: 'error getting incomes today'})
   }
-}
+};
+
+const getMovementByHour = async (store_id) => {
+  try {
+    console.log(moment())
+    let conditions = {
+      // Filtrar por los movimientos del día actual
+      createdAt: {
+        [Sequelize.Op.gte]: moment().startOf("day").toDate(),
+      },
+      type_movement: 1,
+    };
+    if (store_id != 0) conditions.store_id = store_id;
+
+    const movementsByHour = await Movement.findAll({
+      attributes: [
+        // Crear una columna virtual con la hora del movimiento
+        [Sequelize.literal(`DATE_FORMAT(createdAt, '%Y-%m-%d %H')`), "hour"],
+        // Contar la cantidad de movimientos en cada hora
+        [Sequelize.fn("COUNT", Sequelize.col("id")), "count"],
+      ],
+      where: conditions,
+      group: "hour",
+      raw: true,
+    });
+
+    return parseQuery(movementsByHour);
+  } catch (error) {}
+};
