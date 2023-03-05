@@ -673,7 +673,8 @@ async function getMovementByHour(id_store) {
   const conditions = {
     createdAt: {
       [Op.between]: [startOfDay, endOfDay]
-    }
+    },
+    type_movement:1
   }
   if(id_store !=0) conditions.id_store = id_store
   // Obtener la fecha de inicio y fin del día actual
@@ -703,3 +704,62 @@ function countMovementsByHour(movements) {
   }
   return sumatoriasPorHora;
 }
+
+export const getCostToChartFilter = async (req, res) => {
+  try {
+    const {filter, typeCost} = req.body
+    const firstDate = moment().startOf(filter).toDate();
+    const secondDate = moment().endOf(filter).toDate();
+    const data = await getCostalue(firstDate,secondDate,typeCost)
+    return res.status(200).json(data)
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({message: error.message})
+    
+  }
+}
+export const getCostToChart = async (req, res) => {
+  try {
+    const {startDate, endDate, typeCost} = req.body
+    const firstDate = moment(startDate).toDate();
+    const secondDate = moment(endDate).toDate();
+    const data = await getCostalue(firstDate,secondDate,typeCost)
+    return res.status(200).json(data)
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({message: error.message})
+    
+  }
+}
+export const getCostalue = async (startDate, endDate, typeCost) => {
+  try {
+    console.log(startDate, endDate);
+    const response = await Movement.findAll({
+      attributes: [
+        [Sequelize.fn("SUM", Sequelize.col("movement_value")), "total"],
+        "id_store",
+      ],
+      include: [
+        {
+          model: Store,
+          attributes: [],
+        },
+      ],
+      where: {
+        createdAt: {
+          [Sequelize.Op.between]: [startDate, endDate],
+        },
+        type_movement: 0,
+        description: {
+          [Op.iLike]: `%${typeCost}%`
+        }
+      },
+      group: ["id_store"],
+    });
+    console.log("praa", response);
+
+    return parseQuery(response);
+  } catch (error) {
+    console.log(error);
+  }
+};

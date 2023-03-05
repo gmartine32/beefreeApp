@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import moment from "moment";
 import { Op, Sequelize } from "sequelize";
 
@@ -10,7 +11,7 @@ export const createStat = async (req,res) =>{
         await Stat.create({
             stat_type: stat_type,
             id_store: id_store,
-            createdAt: createdAt || moment().format('YYYY-MM-DD')
+            createdAt: createdAt || new Date()
         })
 
         res.status(201).json({message:'stat created successfully'})
@@ -56,6 +57,8 @@ export const getStatByStoreFilter = async (req, res) =>{
             stat_type:stat_type
         }
         if(id != 0) conditions.id_store = id
+
+        console.log('@@@@',conditions)
         const order = await Stat.findAll({
             where:conditions,
             include: [
@@ -66,12 +69,12 @@ export const getStatByStoreFilter = async (req, res) =>{
               ],
         })
   
-        if(!order) return res.status(200).json({message:'order not found'})
+        if(!order) return res.status(200).json({message:'stat not found'})
   
         return res.status(200).json(order)
     } catch (error) {
         console.log(error)
-        return res.status(500).json({message:'error getting order'})
+        return res.status(500).json({message:'error getting stats'})
     }
   
   }
