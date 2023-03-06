@@ -8,6 +8,9 @@ import {
   responseMonthChart,
 } from "../libraries/constants/movement.constants.js";
 import { parseQuery } from "../libraries/tools/sql.tools.js";
+import utc from 'dayjs/plugin/utc.js';
+
+dayjs.extend(utc);
 
 export const createMovement = async (req, res) => {
   try {
@@ -684,7 +687,7 @@ async function getMovementByHour(id_store) {
     where:conditions,
   });
   // Realizar una consulta que agrupe los movimientos por hora del día actual y cuente los registros en cada grupo
-
+console.log('LOG1',countMovementsByHour(parseQuery(movementsByHour)))
   return countMovementsByHour(parseQuery(movementsByHour));
   } catch (error) {
     console.log(error)
@@ -702,8 +705,9 @@ function countMovementsByHour(movements) {
   }
   for (let movimiento of movements) {
 
-    const hora = dayjs(movimiento.createdAt).get('hours');
-    sumatoriasPorHora[hora] += movimiento.movement_value;
+    const horaUtc = dayjs.utc(movimiento.createdAt).hour();
+    const hora = (horaUtc - 5 + dayjs().utcOffset() / 60 + 24) % 24;
+    sumatoriasPorHora[hora] += movimiento.movement_value;;
   }
   return sumatoriasPorHora;
 }
