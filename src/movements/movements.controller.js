@@ -628,8 +628,8 @@ export const getIncomesCountTodayByHour = async (req, res) => {
   try {
     const {id_store} = req.params
     const response = await getMovementByHour(id_store)
-
-    return res.status(200).json(response || [])
+    console.log('RESPONSE',response)
+    return res.status(200).json(response)
   } catch (error) {
     res.status(500).json({message: 'error getting incomes today'})
   }
