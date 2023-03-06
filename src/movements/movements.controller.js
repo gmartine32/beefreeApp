@@ -701,7 +701,10 @@ function countMovementsByHour(movements) {
     sumatoriasPorHora[hora] = 0;
   }
   for (let movimiento of movements) {
+
     const hora = dayjs(movimiento.createdAt).hour();
+    console.log('fecha',dayjs(movimiento.createdAt).format('YYYY-MM-DD HH:mm:ss'))
+    console.log('hora',hora)
     sumatoriasPorHora[hora] += movimiento.movement_value;
   }
   return sumatoriasPorHora;
