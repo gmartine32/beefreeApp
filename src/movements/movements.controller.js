@@ -693,6 +693,8 @@ async function getMovementByHour(id_store) {
 }
 
 
+
+
 function countMovementsByHour(movements) {
   const sumatoriasPorHora = {};
   for (let hora = 0; hora <= 23; hora++) {
