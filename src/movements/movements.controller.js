@@ -1,5 +1,5 @@
 import { Movement } from "./movement.js";
-import dayjs from 'dayjs'
+import dayjs from "dayjs";
 import { Store } from "../stores/store.js";
 import moment from "moment";
 import { Op, Sequelize } from "sequelize";
@@ -8,7 +8,7 @@ import {
   responseMonthChart,
 } from "../libraries/constants/movement.constants.js";
 import { parseQuery } from "../libraries/tools/sql.tools.js";
-import utc from 'dayjs/plugin/utc.js';
+import utc from "dayjs/plugin/utc.js";
 
 dayjs.extend(utc);
 
@@ -23,7 +23,6 @@ export const createMovement = async (req, res) => {
       createdAt,
     } = req.body;
 
-
     if (validateMovementValue(movement_value))
       return res.status(400).json({ message: "invalid movement value" });
     if (validateDescription(description))
@@ -34,7 +33,7 @@ export const createMovement = async (req, res) => {
       movement_value,
       id_user,
       id_store,
-      createdAt:createdAt  || new Date(),
+      createdAt: createdAt || new Date(),
     });
     return res.status(200).json({ message: "movement created successfully" });
   } catch (error) {
@@ -629,74 +628,81 @@ const transformData = (data) => {
 
 export const getIncomesCountTodayByHour = async (req, res) => {
   try {
-    const {id_store} = req.params
-    const response = await getMovementByHour(id_store)
-    console.log('RESPONSE',response)
-    return res.status(200).json(response)
+    const { id_store } = req.params;
+
+    const response = await getMovementByHour(id_store);
+    console.log("RESPONSE", response);
+    return res.status(200).json(response);
   } catch (error) {
-    res.status(500).json({message: 'error getting incomes today'})
+    res.status(500).json({ message: "error getting incomes today" });
   }
 };
 
 const getMovementByHour1 = async (store_id) => {
- try {
-  console.log(moment());
-  
-  const where = {
-    type_movement: 1,
-    createdAt: { [Sequelize.Op.gte]: moment().startOf('day').toDate() }
-  };
-  if (store_id !== 0) where.id_store = store_id;
+  try {
+    console.log(moment());
 
-  const movementsByHour = await Movement.findAll({
-    where,
-    attributes: [
-      [
-        Sequelize.fn("DATE_TRUNC", Sequelize.literal("hour"), Sequelize.col("createdAt")),
-        "hour",
+    const where = {
+      type_movement: 1,
+      createdAt: { [Sequelize.Op.gte]: moment().startOf("day").toDate() },
+    };
+    if (store_id !== 0) where.id_store = store_id;
+
+    const movementsByHour = await Movement.findAll({
+      where,
+      attributes: [
+        [
+          Sequelize.fn(
+            "DATE_TRUNC",
+            Sequelize.literal("hour"),
+            Sequelize.col("createdAt")
+          ),
+          "hour",
+        ],
+        [Sequelize.fn("COUNT", Sequelize.col("id")), "count"],
       ],
-      [Sequelize.fn("COUNT", Sequelize.col("id")), "count"],
-    ],
-    group: 'hour',
-    raw: true
-  });
+      group: "hour",
+      raw: true,
+    });
 
-  return parseQuery(movementsByHour);
- } catch (error) {
-  console.log(error)
- }
+    return parseQuery(movementsByHour);
+  } catch (error) {
+    console.log(error);
+  }
 };
 async function getMovementByHour(id_store) {
   try {
     const now = new Date();
-  const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const endOfDay = new Date(startOfDay.getTime() + 24 * 60 * 60 * 1000 - 1);
+    const startOfDay = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate()
+    );
+    const endOfDay = new Date(startOfDay.getTime() + 24 * 60 * 60 * 1000 - 1);
+    console.log("now", now);
+    console.log("startOfDay", startOfDay);
+    console.log("endOfDay", endOfDay);
 
+    const conditions = {
+      createdAt: {
+        [Op.between]: [startOfDay, endOfDay],
+      },
+      type_movement: 1,
+    };
+    if (id_store != 0) conditions.id_store = id_store;
+    // Obtener la fecha de inicio y fin del día actual
 
-  const conditions = {
-    createdAt: {
-      [Op.between]: [startOfDay, endOfDay]
-    },
-    type_movement:1
-  }
-  if(id_store !=0) conditions.id_store = id_store
-  // Obtener la fecha de inicio y fin del día actual
-
-
-  const movementsByHour = await Movement.findAll({
-    where:conditions,
-  });
-  // Realizar una consulta que agrupe los movimientos por hora del día actual y cuente los registros en cada grupo
-console.log('LOG1',countMovementsByHour(parseQuery(movementsByHour)))
-  return countMovementsByHour(parseQuery(movementsByHour));
+    const movementsByHour = await Movement.findAll({
+      where: conditions,
+    });
+    // Realizar una consulta que agrupe los movimientos por hora del día actual y cuente los registros en cada grupo
+    console.log("LOG1", countMovementsByHour(parseQuery(movementsByHour)));
+    return countMovementsByHour(parseQuery(movementsByHour));
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
   // Imprimir el resultado en la consola
 }
-
-
-
 
 function countMovementsByHour(movements) {
   const sumatoriasPorHora = {};
@@ -704,40 +710,37 @@ function countMovementsByHour(movements) {
     sumatoriasPorHora[hora] = 0;
   }
   for (let movimiento of movements) {
-
     const horaUtc = dayjs.utc(movimiento.createdAt).hour();
     const hora = (horaUtc - 5 + dayjs().utcOffset() / 60 + 24) % 24;
-    sumatoriasPorHora[hora] += movimiento.movement_value;;
+    sumatoriasPorHora[hora] += movimiento.movement_value;
   }
   return sumatoriasPorHora;
 }
 
 export const getCostToChartFilter = async (req, res) => {
   try {
-    const {filter, typeCost} = req.body
+    const { filter, typeCost } = req.body;
     const firstDate = moment().startOf(filter).toDate();
     const secondDate = moment().endOf(filter).toDate();
-    const data = await getCostalue(firstDate,secondDate,typeCost)
-    return res.status(200).json(data)
+    const data = await getCostalue(firstDate, secondDate, typeCost);
+    return res.status(200).json(data);
   } catch (error) {
-    console.log(error)
-    return res.status(500).json({message: error.message})
-    
+    console.log(error);
+    return res.status(500).json({ message: error.message });
   }
-}
+};
 export const getCostToChart = async (req, res) => {
   try {
-    const {startDate, endDate, typeCost} = req.body
+    const { startDate, endDate, typeCost } = req.body;
     const firstDate = moment(startDate).toDate();
     const secondDate = moment(endDate).toDate();
-    const data = await getCostalue(firstDate,secondDate,typeCost)
-    return res.status(200).json(data)
+    const data = await getCostalue(firstDate, secondDate, typeCost);
+    return res.status(200).json(data);
   } catch (error) {
-    console.log(error)
-    return res.status(500).json({message: error.message})
-    
+    console.log(error);
+    return res.status(500).json({ message: error.message });
   }
-}
+};
 export const getCostalue = async (startDate, endDate, typeCost) => {
   try {
     console.log(startDate, endDate);
@@ -758,8 +761,8 @@ export const getCostalue = async (startDate, endDate, typeCost) => {
         },
         type_movement: 0,
         description: {
-          [Op.iLike]: `%${typeCost}%`
-        }
+          [Op.iLike]: `%${typeCost}%`,
+        },
       },
       group: ["id_store"],
     });
