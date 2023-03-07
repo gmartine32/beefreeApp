@@ -74,8 +74,8 @@ export const gerOrderByStore = async (id_store) => {
 
 export const getOrderByStoreRangeDate = async (id_store,startDate,endDate) => {
   try {
-    const firstDate = moment(startDate).toDate();
-    const secondDate = moment(endDate).toDate();
+    const firstDate = moment(startDate).startOf('days').toDate();
+    const secondDate = moment(endDate).endOf('days').toDate();
     let conditions = {
       sale_date: {
         [Sequelize.Op.between]: [firstDate, secondDate],
@@ -203,8 +203,8 @@ export const getDataOrderCity = async (cityNames) => {
 
 export const getOrderStateAtRangeDate = async (id_store,startDate,endDate) => {
   try {
-    const firstDate = moment(startDate).toDate();
-    const secondDate = moment(endDate).toDate();
+  const firstDate = moment(startDate).startOf('days').toDate();
+    const secondDate = moment(endDate).endOf('days').toDate();
     let conditions = {
       sale_date: {
         [Sequelize.Op.between]: [firstDate, secondDate],

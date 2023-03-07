@@ -146,8 +146,8 @@ export const getMovementsByStoreCustomDate = async (req, res) => {
   try {
     const { id } = req.params;
     const { startDate, endDate, type_movement } = req.body;
-    const firstDate = moment(startDate).toDate();
-    const secondDate = moment(endDate).toDate();
+    const firstDate = moment(startDate).startOf('days').toDate();
+    const secondDate = moment(endDate).endOf('days').toDate();
     console.log("AQUIII", firstDate, secondDate);
 
     let conditions = {
@@ -516,8 +516,8 @@ export const getIncomesValues = async (req, res) => {
   try {
     const { startDate, endDate } = req.body;
     console.log("@@@ hola");
-    const firstDate = moment(startDate).toDate();
-    const secondDate = moment(endDate).toDate();
+    const firstDate = moment(startDate).startOf('days').toDate();
+    const secondDate = moment(endDate).endOf('days').toDate();
     const data = await getIncomesValue(firstDate, secondDate);
     res.status(200).json(data || []);
   } catch (error) {
@@ -738,8 +738,8 @@ export const getCostToChartFilter = async (req, res) => {
 export const getCostToChart = async (req, res) => {
   try {
     const { startDate, endDate, typeCost } = req.body;
-    const firstDate = moment(startDate).toDate();
-    const secondDate = moment(endDate).toDate();
+    const firstDate = moment(startDate).startOf('days').toDate();
+    const secondDate = moment(endDate).endOf('days').toDate();
     const data = await getCostalue(firstDate, secondDate, typeCost);
     return res.status(200).json(data);
   } catch (error) {

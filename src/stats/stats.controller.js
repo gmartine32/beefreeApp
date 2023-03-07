@@ -85,8 +85,8 @@ export const getStatByStoreFilter = async (req, res) =>{
       const {startDate, endDate, stat_type} = req.body
 
       console.log('BODY',req.body)
-      const firstDate = moment(startDate).toDate()
-      const secondDate = moment(endDate).toDate()
+      const firstDate = moment(startDate).startOf('days').toDate();
+      const secondDate = moment(endDate).endOf('days').toDate();
       let conditions = {
           createdAt:{
               [Sequelize.Op.between]: [firstDate, secondDate],
