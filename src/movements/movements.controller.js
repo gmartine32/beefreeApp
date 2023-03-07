@@ -530,6 +530,9 @@ export const getIncomesValuesFilter = async (req, res) => {
     const { filter } = req.params;
     const firstDate = moment().startOf(filter).toDate();
     const secondDate = moment().endOf(filter).toDate();
+    console.log('firstDate', firstDate)
+    console.log('secondDate', secondDate)
+
     const data = await getIncomesValue(firstDate, secondDate);
     res.status(200).json(data || []);
   } catch (error) {
@@ -723,6 +726,8 @@ export const getCostToChartFilter = async (req, res) => {
     const { filter, typeCost } = req.body;
     const firstDate = moment().startOf(filter).toDate();
     const secondDate = moment().endOf(filter).toDate();
+    console.log('firstDate', firstDate)
+    console.log('secondDate', secondDate)
     const data = await getCostalue(firstDate, secondDate, typeCost);
     return res.status(200).json(data);
   } catch (error) {
