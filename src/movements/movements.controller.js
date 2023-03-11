@@ -696,7 +696,7 @@ async function getMovementByHour(id_store) {
     };
     if (id_store != 0) conditions.id_store = id_store;
     // Obtener la fecha de inicio y fin del día actual
-
+console.log('conditions22',conditions)
     const movementsByHour = await Movement.findAll({
       where: conditions,
     });
