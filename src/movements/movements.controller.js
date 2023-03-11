@@ -695,6 +695,7 @@ console.log('conditions22',conditions)
       where: conditions,
     });
     // Realizar una consulta que agrupe los movimientos por hora del día actual y cuente los registros en cada grupo
+    console.log('kisss',movementsByHour)
     console.log("LOG1", countMovementsByHour(parseQuery(movementsByHour)));
     return countMovementsByHour(parseQuery(movementsByHour));
   } catch (error) {
