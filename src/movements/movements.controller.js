@@ -154,9 +154,8 @@ export const getMovementsByStoreCustomDate = async (req, res) => {
       createdAt: {
         [Sequelize.Op.between]: [firstDate, secondDate],
       },
-      type_movement: type_movement,
     };
-
+    if(type_movement != undefined) conditions.type_movement = type_movement;
     if (id != 0) conditions.id_store = id;
     const order = await Movement.findAll({
       where: conditions,
@@ -168,7 +167,7 @@ export const getMovementsByStoreCustomDate = async (req, res) => {
       ],
     });
 
-    if (!order) return res.status(200).json({ message: "order not found" });
+    if (!order) return res.status(200).json({ message: "movement not found" });
 
     return res.status(200).json(order);
   } catch (error) {}
@@ -184,8 +183,9 @@ export const getMovementByStoreFilter = async (req, res) => {
       createdAt: {
         [Sequelize.Op.between]: [firstDate, secondDate],
       },
-      type_movement: type_movement,
+     
     };
+    if(type_movement != undefined)  conditions.type_movement= type_movement
     if (id != 0) conditions.id_store = id;
     const order = await Movement.findAll({
       where: conditions,
