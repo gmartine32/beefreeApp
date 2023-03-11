@@ -146,8 +146,8 @@ export const getMovementsByStoreCustomDate = async (req, res) => {
   try {
     const { id } = req.params;
     const { startDate, endDate, type_movement } = req.body;
-    const firstDate = moment(startDate).startOf('days').toDate();
-    const secondDate = moment(endDate).endOf('days').toDate();
+    const firstDate = moment(startDate).startOf("days").toDate();
+    const secondDate = moment(endDate).endOf("days").toDate();
     console.log("AQUIII", firstDate, secondDate);
 
     let conditions = {
@@ -516,8 +516,8 @@ export const getIncomesValues = async (req, res) => {
   try {
     const { startDate, endDate } = req.body;
     console.log("@@@ hola");
-    const firstDate = moment(startDate).startOf('days').toDate();
-    const secondDate = moment(endDate).endOf('days').toDate();
+    const firstDate = moment(startDate).startOf("days").toDate();
+    const secondDate = moment(endDate).endOf("days").toDate();
     const data = await getIncomesValue(firstDate, secondDate);
     res.status(200).json(data || []);
   } catch (error) {
@@ -530,8 +530,8 @@ export const getIncomesValuesFilter = async (req, res) => {
     const { filter } = req.params;
     const firstDate = moment().startOf(filter).toDate();
     const secondDate = moment().endOf(filter).toDate();
-    console.log('firstDate', firstDate)
-    console.log('secondDate', secondDate)
+    console.log("firstDate", firstDate);
+    console.log("secondDate", secondDate);
 
     const data = await getIncomesValue(firstDate, secondDate);
     res.status(200).json(data || []);
@@ -675,10 +675,10 @@ const getMovementByHour1 = async (store_id) => {
 };
 async function getMovementByHour(id_store) {
   try {
-    const nowDayJs = dayjs().subtract(5,'hours')
-    console.log('NOOOOOW',nowDayJs)
-    const startOfDay = nowDayJs.startOf('day').toDate()
-    const endOfDay = nowDayJs.endOf('day').toDate();
+    const nowDayJs = dayjs().subtract(5, "hours");
+    console.log("NOOOOOW", nowDayJs);
+    const startOfDay = nowDayJs.startOf("day").toDate();
+    const endOfDay = nowDayJs.endOf("day").toDate();
     console.log("startOfDay", startOfDay);
     console.log("endOfDay", endOfDay);
 
@@ -689,18 +689,15 @@ async function getMovementByHour(id_store) {
       type_movement: 1,
     };
     if (id_store != 0) conditions.id_store = id_store;
-    // Obtener la fecha de inicio y fin del día actual
-console.log('conditions22',conditions)
+
+    console.log("conditions22", conditions);
+
+
     const movementsByHour = await Movement.findAll({
-      where: {
-        createdAt: {
-          [Sequelize.Op.between]: [startOfDay, endOfDay],
-        },
-        type_movement: 1,
-      },
+      where: {...conditions},
     });
-    // Realizar una consulta que agrupe los movimientos por hora del día actual y cuente los registros en cada grupo
-    console.log('kisss',movementsByHour)
+
+    console.log("kisss", movementsByHour);
     console.log("LOG1", countMovementsByHour(parseQuery(movementsByHour)));
     return countMovementsByHour(parseQuery(movementsByHour));
   } catch (error) {
@@ -727,8 +724,8 @@ export const getCostToChartFilter = async (req, res) => {
     const { filter, typeCost } = req.body;
     const firstDate = moment().startOf(filter).toDate();
     const secondDate = moment().endOf(filter).toDate();
-    console.log('firstDate', firstDate)
-    console.log('secondDate', secondDate)
+    console.log("firstDate", firstDate);
+    console.log("secondDate", secondDate);
     const data = await getCostalue(firstDate, secondDate, typeCost);
     return res.status(200).json(data);
   } catch (error) {
@@ -739,8 +736,8 @@ export const getCostToChartFilter = async (req, res) => {
 export const getCostToChart = async (req, res) => {
   try {
     const { startDate, endDate, typeCost } = req.body;
-    const firstDate = moment(startDate).startOf('days').toDate();
-    const secondDate = moment(endDate).endOf('days').toDate();
+    const firstDate = moment(startDate).startOf("days").toDate();
+    const secondDate = moment(endDate).endOf("days").toDate();
     const data = await getCostalue(firstDate, secondDate, typeCost);
     return res.status(200).json(data);
   } catch (error) {
