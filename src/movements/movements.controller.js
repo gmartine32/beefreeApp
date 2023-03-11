@@ -692,7 +692,12 @@ async function getMovementByHour(id_store) {
     // Obtener la fecha de inicio y fin del día actual
 console.log('conditions22',conditions)
     const movementsByHour = await Movement.findAll({
-      where: conditions,
+      where: {
+        createdAt: {
+          [Sequelize.Op.between]: [startOfDay, endOfDay],
+        },
+        type_movement: 1,
+      },
     });
     // Realizar una consulta que agrupe los movimientos por hora del día actual y cuente los registros en cada grupo
     console.log('kisss',movementsByHour)
