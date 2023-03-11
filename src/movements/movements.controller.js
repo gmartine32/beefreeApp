@@ -677,6 +677,7 @@ async function getMovementByHour(id_store) {
   try {
     const nowDayJs = dayjs().subtract(5,'hours')
     const now = nowDayJs.toDate();
+    console.log('NOOOOOW',now)
     const startOfDay = new Date(
       now.getFullYear(),
       now.getMonth(),
