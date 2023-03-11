@@ -677,8 +677,8 @@ async function getMovementByHour(id_store) {
   try {
     const nowDayJs = dayjs().subtract(5,'hours')
     console.log('NOOOOOW',nowDayJs)
-    const startOfDay = nowDayJs.startOf('day').toDate()
-    const endOfDay = nowDayJs.endOf('day').toDate();
+    const startOfDay = nowDayJs.startOf('days').toDate()
+    const endOfDay = nowDayJs.endOf('days').toDate();
     console.log("startOfDay", startOfDay);
     console.log("endOfDay", endOfDay);
 
