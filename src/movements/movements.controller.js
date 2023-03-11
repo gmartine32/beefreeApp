@@ -146,8 +146,8 @@ export const getMovementsByStoreCustomDate = async (req, res) => {
   try {
     const { id } = req.params;
     const { startDate, endDate, type_movement } = req.body;
-    const firstDate = moment(startDate).startOf("days").toDate();
-    const secondDate = moment(endDate).endOf("days").toDate();
+    const firstDate = dayjs(startDate).startOf("days").toDate();
+    const secondDate = dayjs(endDate).endOf("days").toDate();
     console.log("AQUIII", firstDate, secondDate);
 
     let conditions = {
