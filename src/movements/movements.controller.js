@@ -675,16 +675,16 @@ const getMovementByHour1 = async (store_id) => {
 };
 async function getMovementByHour(id_store) {
   try {
-    const nowDayJs = dayjs();
+    const nowDayJs = dayjs().subtract(5, "hours");
     console.log("NOOOOOW", nowDayJs);
-    const startOfDay = nowDayJs.startOf("day").toDate();
-    const endOfDay = nowDayJs.endOf("day").toDate();
+    const startOfDay = `${nowDayJs.format('YYYY-MM-DD')} 00:00:00.000 -05:00`;
+    const endOfDay = `${nowDayJs.format('YYYY-MM-DD')} 23:59:59.999 -05:00`;
     console.log("startOfDay", startOfDay);
     console.log("endOfDay", endOfDay);
 
     const conditions = {
       createdAt: {
-        [Sequelize.Op.between]: ['2023-03-11 00:00:00.000 -05:00', '2023-03-11 23:59:59.999 -05:00'],
+        [Sequelize.Op.between]: [startOfDay, endOfDay],
       },
       type_movement: 1,
     };
