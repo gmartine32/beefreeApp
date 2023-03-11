@@ -684,7 +684,7 @@ async function getMovementByHour(id_store) {
 
     const conditions = {
       createdAt: {
-        [Sequelize.Op.between]: [startOfDay, endOfDay],
+        [Sequelize.Op.between]: ['2023-03-11 00:00:00.000 -05:00', '2023-03-11 23:59:59.999 -05:00'],
       },
       type_movement: 1,
     };
