@@ -684,7 +684,7 @@ async function getMovementByHour(id_store) {
 
     const conditions = {
       createdAt: {
-        [Op.between]: [startOfDay, endOfDay],
+        [Sequelize.Op.between]: [startOfDay, endOfDay],
       },
       type_movement: 1,
     };
