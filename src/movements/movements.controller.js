@@ -695,7 +695,7 @@ console.log('conditions22',conditions)
       where: conditions,
     }); */
 
-    const movementsByHour = Sequelize.query(`SELECT "id", "description", "type_movement", "movement_value", "createdAt", "updatedAt", "id_user", "id_store" FROM "movements" AS "movements" WHERE "movements"."createdAt" BETWEEN '2023-03-11 00:00:00.000 -05:00' AND '2023-03-11 23:59:59.999 -05:00' AND "movements"."type_movement" = 1 AND "movements"."id_store" = '13'
+    const movementsByHour = await  Sequelize.query(`SELECT "id", "description", "type_movement", "movement_value", "createdAt", "updatedAt", "id_user", "id_store" FROM "movements" AS "movements" WHERE "movements"."createdAt" BETWEEN '2023-03-11 00:00:00.000 -05:00' AND '2023-03-11 23:59:59.999 -05:00' AND "movements"."type_movement" = 1 AND "movements"."id_store" = '13'
     `)
     // Realizar una consulta que agrupe los movimientos por hora del día actual y cuente los registros en cada grupo
     console.log('kisss',movementsByHour)
