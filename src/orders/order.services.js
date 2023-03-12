@@ -1,4 +1,5 @@
 import axios from "axios";
+import dayjs from "dayjs";
 import moment from "moment";
 import { Op, Sequelize } from "sequelize";
 import { parseQuery } from "../libraries/tools/sql.tools.js";
@@ -203,8 +204,8 @@ export const getDataOrderCity = async (cityNames) => {
 
 export const getOrderStateAtRangeDate = async (id_store,startDate,endDate) => {
   try {
-  const firstDate = moment(startDate).startOf('days').toDate();
-    const secondDate = moment(endDate).endOf('days').toDate();
+  const firstDate = `${dayjs(startDate).format('YYYY-MM-DD')} 00:00:00.000 -05:00`;
+    const secondDate =`${dayjs(endDate).format('YYYY-MM-DD')} 23:59:59.999 -05:00`;
     let conditions = {
       sale_date: {
         [Sequelize.Op.between]: [firstDate, secondDate],
@@ -221,8 +222,8 @@ export const getOrderStateAtRangeDate = async (id_store,startDate,endDate) => {
 export const getStatesByStoreFilter = async (id_store, filter) => {
   try {
 
-    const firstDate = moment().startOf(filter).toDate();
-    const secondDate = moment().endOf(filter).toDate();
+    const firstDate = filter == 'day' ?`${dayjs().subtract(5,'hour').format('YYYY-MM-DD')} 00:00:00.000 -05:00` : dayjs().subtract(5,'hour').startOf(filter).toDate();
+    const secondDate = filter == 'day' ?`${dayjs().subtract(5,'hour').format('YYYY-MM-DD')} 23:59:59.999 -05:00` : dayjs().subtract(5,'hour').endOf(filter).toDate();
 
 
     let conditions = {
