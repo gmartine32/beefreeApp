@@ -110,6 +110,7 @@ export const getOrderByStoreOnFilter = async (id_store, filter) => {
       },
     };
     if (id_store != 0) conditions.id_store = id_store;
+    console.log('ordr conditions',conditions)
     const response = await Order.findAll({
       where: conditions,
       include: [
