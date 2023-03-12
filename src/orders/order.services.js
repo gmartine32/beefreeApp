@@ -175,7 +175,7 @@ export const getDataOrderCity = async (cityNames) => {
     }));
     const promesas = ciudadesUnicas.map((ciudad) => {
       if (ciudad.trim()=='') return {ciudad:'other cities',latitud:0,longitud:0}
-      const params = { q: ciudad, key: process.env.API_KEY_MAP };
+      const params = { q: ciudad+'+United States', key: process.env.API_KEY_MAP };
       return axios.get(url, { params }).then((response) => {
         const data = response.data;
         const lat = data.results[0].geometry.lat;
@@ -183,6 +183,8 @@ export const getDataOrderCity = async (cityNames) => {
         return { ciudad, latitud: lat, longitud: lng };
       });
     });
+
+    
     await Promise.allSettled(promesas).then((coordenadas) => {
       // Combina los datos de cantidad y coordenadas para crear el array de JSONs final
 
