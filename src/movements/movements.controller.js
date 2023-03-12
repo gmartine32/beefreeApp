@@ -157,6 +157,7 @@ export const getMovementsByStoreCustomDate = async (req, res) => {
     };
     if(type_movement != undefined) conditions.type_movement = type_movement;
     if (id != 0) conditions.id_store = id;
+    console.log('@@@@@',conditions);
     const order = await Movement.findAll({
       where: conditions,
       include: [
@@ -187,6 +188,7 @@ export const getMovementByStoreFilter = async (req, res) => {
     };
     if(type_movement != undefined)  conditions.type_movement= type_movement
     if (id != 0) conditions.id_store = id;
+    console.log('@@@@@2',conditions);
     const order = await Movement.findAll({
       where: conditions,
       include: [
