@@ -83,6 +83,7 @@ export const getOrderByStoreRangeDate = async (id_store,startDate,endDate) => {
       },
     };
     if (id_store != 0) conditions.id_store = id_store;
+    console.log('conditions',conditions)
     const response = await Order.findAll({
       where: conditions,
       include: [
@@ -184,7 +185,7 @@ export const getDataOrderCity = async (cityNames) => {
       });
     });
 
-    
+
     await Promise.allSettled(promesas).then((coordenadas) => {
       // Combina los datos de cantidad y coordenadas para crear el array de JSONs final
 
