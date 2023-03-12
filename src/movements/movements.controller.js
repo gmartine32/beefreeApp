@@ -155,7 +155,7 @@ export const getMovementsByStoreCustomDate = async (req, res) => {
         [Sequelize.Op.between]: [firstDate, secondDate],
       },
     };
-    
+
     if(type_movement != undefined) conditions.type_movement = type_movement;
     if (id != 0) conditions.id_store = id;
     console.log('@@@@@',conditions);
@@ -179,8 +179,8 @@ export const getMovementByStoreFilter = async (req, res) => {
   try {
     const { id, filter } = req.params;
     const { type_movement } = req.body;
-    const firstDate = dayjs().subtract(5,'hour').startOf(filter).toDate();
-    const secondDate = dayjs().subtract(5,'hour').endOf(filter).toDate();
+    const firstDate = filter == 'day' ?`${dayjs().subtract(5,'hour').format('YYYY-MM-DD')} 00:00:00.000 -05:00` : dayjs().subtract(5,'hour').startOf(filter).toDate();
+    const secondDate = filter == 'day' ?`${dayjs().subtract(5,'hour').format('YYYY-MM-DD')} 23:59:59.999 -05:00` : dayjs().subtract(5,'hour').endOf(filter).toDate();
     const conditions = {
       createdAt: {
         [Sequelize.Op.between]: [firstDate, secondDate],
