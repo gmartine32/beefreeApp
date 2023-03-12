@@ -155,6 +155,7 @@ export const getMovementsByStoreCustomDate = async (req, res) => {
         [Sequelize.Op.between]: [firstDate, secondDate],
       },
     };
+    
     if(type_movement != undefined) conditions.type_movement = type_movement;
     if (id != 0) conditions.id_store = id;
     console.log('@@@@@',conditions);
