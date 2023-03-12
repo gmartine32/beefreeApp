@@ -75,8 +75,8 @@ export const gerOrderByStore = async (id_store) => {
 
 export const getOrderByStoreRangeDate = async (id_store,startDate,endDate) => {
   try {
-    const firstDate = moment(startDate).startOf('days').toDate();
-    const secondDate = moment(endDate).endOf('days').toDate();
+    const firstDate = `${dayjs(startDate).format('YYYY-MM-DD')} 00:00:00.000 -05:00`;
+    const secondDate = `${dayjs(endDate).format('YYYY-MM-DD')} 23:59:59.999 -05:00`;
     let conditions = {
       sale_date: {
         [Sequelize.Op.between]: [firstDate, secondDate],
@@ -155,7 +155,9 @@ export const getDataOrderCityRangeDate = async (
 ) => {
   try {
     const orders = await getOrderByStoreRangeDate(id_store, startDate, endDate);
-    const cities = orders.map((order) => `${order.ship_state}`);
+
+    const filteredOrders = orders.map(order =>({...order,ship_state:order.ship_country != 'United States' ? '':order.ship_state}));
+    const cities = filteredOrders.map((order) => `${order.ship_state}`);
     const coordenadas = await getDataOrderCity(cities);
     return coordenadas;
   } catch (error) {
