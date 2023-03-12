@@ -48,8 +48,8 @@ export const getStatByStoreFilter = async (req, res) =>{
     try {
         const { id,filter } = req.params;
         const {stat_type} = req.body;
-        const firstDate = moment().startOf(filter).toDate()
-        const secondDate = moment().endOf(filter).toDate()
+        const firstDate = filter == 'day' ?`${dayjs().subtract(5,'hour').format('YYYY-MM-DD')} 00:00:00.000 -05:00` : `${dayjs().subtract(5,'hour').startOf(filter).format('YYYY-MM-DD')} 00:00:00.000 -05:00`;
+        const secondDate = filter == 'day' ?`${dayjs().subtract(5,'hour').format('YYYY-MM-DD')} 23:59:59.999 -05:00` : `${dayjs().subtract(5,'hour').endOf(filter).format('YYYY-MM-DD')} 23:59:59.999 -05:00`;
         const conditions={
             createdAt:{
                 [Sequelize.Op.between]: [firstDate, secondDate],
@@ -85,8 +85,8 @@ export const getStatByStoreFilter = async (req, res) =>{
       const {startDate, endDate, stat_type} = req.body
 
       console.log('BODY',req.body)
-      const firstDate = moment(startDate).startOf('days').toDate();
-      const secondDate = moment(endDate).endOf('days').toDate();
+      const firstDate = `${dayjs(startDate).format('YYYY-MM-DD')} 00:00:00.000 -05:00`;
+      const secondDate = `${dayjs(endDate).format('YYYY-MM-DD')} 23:59:59.999 -05:00`;
       let conditions = {
           createdAt:{
               [Sequelize.Op.between]: [firstDate, secondDate],

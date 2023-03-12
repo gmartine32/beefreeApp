@@ -101,8 +101,8 @@ export const getOrderByStoreRangeDate = async (id_store,startDate,endDate) => {
 
 export const getOrderByStoreOnFilter = async (id_store, filter) => {
   try {
-    const firstDate = filter == 'day' ?`${dayjs().subtract(5,'hour').format('YYYY-MM-DD')} 00:00:00.000 -05:00` : dayjs().subtract(5,'hour').startOf(filter).toDate();
-    const secondDate = filter == 'day' ?`${dayjs().subtract(5,'hour').format('YYYY-MM-DD')} 23:59:59.999 -05:00` : dayjs().subtract(5,'hour').endOf(filter).toDate();
+    const firstDate = filter == 'day' ?`${dayjs().subtract(5,'hour').format('YYYY-MM-DD')} 00:00:00.000 -05:00` : `${dayjs().subtract(5,'hour').startOf(filter).format('YYYY-MM-DD')} 00:00:00.000 -05:00`;
+    const secondDate = filter == 'day' ?`${dayjs().subtract(5,'hour').format('YYYY-MM-DD')} 23:59:59.999 -05:00` : `${dayjs().subtract(5,'hour').endOf(filter).format('YYYY-MM-DD')} 23:59:59.999 -05:00`;
 
     const conditions = {
       sale_date: {

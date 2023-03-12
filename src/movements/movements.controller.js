@@ -179,8 +179,8 @@ export const getMovementByStoreFilter = async (req, res) => {
   try {
     const { id, filter } = req.params;
     const { type_movement } = req.body;
-    const firstDate = filter == 'day' ?`${dayjs().subtract(5,'hour').format('YYYY-MM-DD')} 00:00:00.000 -05:00` : dayjs().subtract(5,'hour').startOf(filter).toDate();
-    const secondDate = filter == 'day' ?`${dayjs().subtract(5,'hour').format('YYYY-MM-DD')} 23:59:59.999 -05:00` : dayjs().subtract(5,'hour').endOf(filter).toDate();
+    const firstDate = filter == 'day' ?`${dayjs().subtract(5,'hour').format('YYYY-MM-DD')} 00:00:00.000 -05:00` : `${dayjs().subtract(5,'hour').startOf(filter).format('YYYY-MM-DD')} 00:00:00.000 -05:00`;
+    const secondDate = filter == 'day' ?`${dayjs().subtract(5,'hour').format('YYYY-MM-DD')} 23:59:59.999 -05:00` : `${dayjs().subtract(5,'hour').endOf(filter).format('YYYY-MM-DD')} 23:59:59.999 -05:00`;
     const conditions = {
       createdAt: {
         [Sequelize.Op.between]: [firstDate, secondDate],
@@ -231,8 +231,8 @@ export const getMovementsByStore = async (id_store) => {
 };
 export const getMovementsStoreByWeek = async (id_store) => {
   try {
-    const startOfWeek = moment().startOf("week").toDate();
-    const endOfWeek = moment().endOf("week").toDate();
+    const startOfWeek =  `${dayjs().subtract(5,'hour').startOf('week').format('YYYY-MM-DD')} 00:00:00.000 -05:00`;
+    const endOfWeek = `${dayjs().subtract(5,'hour').endOf('week').format('YYYY-MM-DD')} 00:00:00.000 -05:00`;
     const movements = await Movement.findAll({
       where: {
         createdAt: {
