@@ -519,8 +519,8 @@ export const getIncomesValues = async (req, res) => {
   try {
     const { startDate, endDate } = req.body;
     console.log("@@@ hola");
-    const firstDate = moment(startDate).startOf("days").toDate();
-    const secondDate = moment(endDate).endOf("days").toDate();
+    const firstDate = `${dayjs(startDate).format('YYYY-MM-DD')} 00:00:00.000 -05:00`;
+    const secondDate = `${dayjs(endDate).format('YYYY-MM-DD')} 23:59:59.999 -05:00`;
     const data = await getIncomesValue(firstDate, secondDate);
     res.status(200).json(data || []);
   } catch (error) {
@@ -531,8 +531,8 @@ export const getIncomesValues = async (req, res) => {
 export const getIncomesValuesFilter = async (req, res) => {
   try {
     const { filter } = req.params;
-    const firstDate = moment().startOf(filter).toDate();
-    const secondDate = moment().endOf(filter).toDate();
+    const firstDate = filter == 'day' ?`${dayjs().subtract(5,'hour').format('YYYY-MM-DD')} 00:00:00.000 -05:00` : `${dayjs().subtract(5,'hour').startOf(filter).format('YYYY-MM-DD')} 00:00:00.000 -05:00`;
+    const secondDate = filter == 'day' ?`${dayjs().subtract(5,'hour').format('YYYY-MM-DD')} 23:59:59.999 -05:00` : `${dayjs().subtract(5,'hour').endOf(filter).format('YYYY-MM-DD')} 23:59:59.999 -05:00`;
     console.log("firstDate", firstDate);
     console.log("secondDate", secondDate);
 
@@ -725,8 +725,9 @@ function countMovementsByHour(movements) {
 export const getCostToChartFilter = async (req, res) => {
   try {
     const { filter, typeCost } = req.body;
-    const firstDate = moment().startOf(filter).toDate();
-    const secondDate = moment().endOf(filter).toDate();
+    const firstDate = filter == 'day' ?`${dayjs().subtract(5,'hour').format('YYYY-MM-DD')} 00:00:00.000 -05:00` : `${dayjs().subtract(5,'hour').startOf(filter).format('YYYY-MM-DD')} 00:00:00.000 -05:00`;
+    const secondDate = filter == 'day' ?`${dayjs().subtract(5,'hour').format('YYYY-MM-DD')} 23:59:59.999 -05:00` : `${dayjs().subtract(5,'hour').endOf(filter).format('YYYY-MM-DD')} 23:59:59.999 -05:00`;
+    
     console.log("firstDate", firstDate);
     console.log("secondDate", secondDate);
     const data = await getCostalue(firstDate, secondDate, typeCost);
@@ -739,8 +740,8 @@ export const getCostToChartFilter = async (req, res) => {
 export const getCostToChart = async (req, res) => {
   try {
     const { startDate, endDate, typeCost } = req.body;
-    const firstDate = moment(startDate).startOf("days").toDate();
-    const secondDate = moment(endDate).endOf("days").toDate();
+    const firstDate = `${dayjs(startDate).format('YYYY-MM-DD')} 00:00:00.000 -05:00`;
+    const secondDate = `${dayjs(endDate).format('YYYY-MM-DD')} 23:59:59.999 -05:00`;
     const data = await getCostalue(firstDate, secondDate, typeCost);
     return res.status(200).json(data);
   } catch (error) {
