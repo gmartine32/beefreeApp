@@ -7,6 +7,6 @@ import Sequelize from "sequelize";
 
 
 const databaseUrl = 'postgres://admin:123456@31.220.56.22:5432/beefreedb';
-const db = new Sequelize(databaseUrl);
+export const sequelize = new Sequelize(databaseUrl);
 
-//export const sequelize = new Sequelize('postgres://admin:uaOYWIDnlylRN3Yx1xbxPWsZWMFtg5Yf@dpg-cf2al094reb5o452enpg-a.oregon-postgres.render.com/beefreedb?ssl=true',{keepAliveTimeout:true,logging: true, timezone: 'America/Bogota',})
+// export const sequelize = new Sequelize('postgres://admin:uaOYWIDnlylRN3Yx1xbxPWsZWMFtg5Yf@dpg-cf2al094reb5o452enpg-a.oregon-postgres.render.com/beefreedb?ssl=true',{keepAliveTimeout:true,logging: true, timezone: 'America/Bogota',})
