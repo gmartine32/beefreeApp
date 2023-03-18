@@ -93,8 +93,8 @@ export const authUser = async (req, res) => {
     })
     if (!user) return res.status(404).json({ message: "Username not registered" });
     if(user.password != password) return res.status(401).json({message: "Incorrect password"})
-    const token = generateToken(parseQuery( user))
-    res.status(202).json({token:token, user:user})
+    //const token = generateToken(parseQuery( user))
+    res.status(202).json({token:'', user:user})
   } catch (error) {
     console.log(error)
     res.status(500).json({ message: "Technical error" });
