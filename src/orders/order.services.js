@@ -169,7 +169,7 @@ export const getDataOrderCityRangeDate = async (
 export const getDataOrderCity = async (cityNames) => {
   try {
     let response = [];
-    const url = process.env.HOST_API_MAP;
+    const url = 'https://api.opencagedata.com/geocode/v1/json';
     const ciudadesUnicas = Array.from(new Set(cityNames));
     const conteosCiudades = ciudadesUnicas.map((ciudad) => ({
       nombre: ciudad,
@@ -177,7 +177,7 @@ export const getDataOrderCity = async (cityNames) => {
     }));
     const promesas = ciudadesUnicas.map((ciudad) => {
       if (ciudad.trim()=='') return {ciudad:'other cities',latitud:0,longitud:0}
-      const params = { q: ciudad+'+United States', key: process.env.API_KEY_MAP };
+      const params = { q: ciudad+'+United States', key: '2b9ad2046e204c76be82323feef37df9' };
       console.log(url)
       console.log(params)
       return axios.get(url, { params }).then((response) => {
