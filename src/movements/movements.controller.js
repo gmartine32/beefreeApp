@@ -611,7 +611,7 @@ const transformData = (data) => {
   const result = [];
 
   // Create an array of all possible quarter-month combinations
-  const quarterMonths = [1, 2, 3].flatMap((month) =>
+  const quarterMonths = [1, 2, 3, 4].flatMap((month) =>
     [1, 2, 3, 4].map((quarter) => ({ month, quarter }))
   );
 
