@@ -82,3 +82,78 @@ export const responseMonthChart = [
         "movementValueSum": 0
     }
 ]
+
+export const templateData = [
+    {
+      year: '2023',
+      quarter: '1',
+      month: '1',
+      total_movement_value: 0,
+    },
+    {
+      year: '2023',
+      quarter: '1',
+      month: '2',
+      total_movement_value: 0,
+    },
+    {
+      year: '2023',
+      quarter: '1',
+      month: '3',
+      total_movement_value: 0,
+    },
+    {
+      year: '2023',
+      quarter: '2',
+      month: '4',
+      total_movement_value: 0,
+    },
+    {
+      year: '2023',
+      quarter: '2',
+      month: '5',
+      total_movement_value: 0,
+    },
+    {
+      year: '2023',
+      quarter: '2',
+      month: '6',
+      total_movement_value: 0,
+    },
+    {
+      year: '2023',
+      quarter: '3',
+      month: '7',
+      total_movement_value: 0,
+    },
+    {
+      year: '2023',
+      quarter: '3',
+      month: '8',
+      total_movement_value: 0,
+    },
+    {
+      year: '2023',
+      quarter: '3',
+      month: '9',
+      total_movement_value: 0,
+    },
+    {
+      year: '2023',
+      quarter: '4',
+      month: '10',
+      total_movement_value: 0,
+    },
+    {
+      year: '2023',
+      quarter: '4',
+      month: '11',
+      total_movement_value: 0,
+    },
+    {
+      year: '2023',
+      quarter: '4',
+      month: '12',
+      total_movement_value: 0,
+    },
+  ];

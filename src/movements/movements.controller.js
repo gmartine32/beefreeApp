@@ -6,6 +6,7 @@ import { Op, Sequelize } from "sequelize";
 import {
   MOVEMENT_TYPE,
   responseMonthChart,
+  templateData,
 } from "../libraries/constants/movement.constants.js";
 import { parseQuery } from "../libraries/tools/sql.tools.js";
 import utc from "dayjs/plugin/utc.js";
@@ -146,8 +147,12 @@ export const getMovementsByStoreCustomDate = async (req, res) => {
   try {
     const { id } = req.params;
     const { startDate, endDate, type_movement } = req.body;
-    const firstDate = `${dayjs(startDate).format('YYYY-MM-DD')} 00:00:00.000 -05:00`;
-    const secondDate = `${dayjs(endDate).format('YYYY-MM-DD')} 23:59:59.999 -05:00`;
+    const firstDate = `${dayjs(startDate).format(
+      "YYYY-MM-DD"
+    )} 00:00:00.000 -05:00`;
+    const secondDate = `${dayjs(endDate).format(
+      "YYYY-MM-DD"
+    )} 23:59:59.999 -05:00`;
     console.log("AQUIII", firstDate, secondDate);
 
     let conditions = {
@@ -156,9 +161,9 @@ export const getMovementsByStoreCustomDate = async (req, res) => {
       },
     };
 
-    if(type_movement != undefined) conditions.type_movement = type_movement;
+    if (type_movement != undefined) conditions.type_movement = type_movement;
     if (id != 0) conditions.id_store = id;
-    console.log('@@@@@',conditions);
+    console.log("@@@@@", conditions);
     const order = await Movement.findAll({
       where: conditions,
       include: [
@@ -179,17 +184,32 @@ export const getMovementByStoreFilter = async (req, res) => {
   try {
     const { id, filter } = req.params;
     const { type_movement } = req.body;
-    const firstDate = filter == 'day' ?`${dayjs().subtract(5,'hour').format('YYYY-MM-DD')} 00:00:00.000 -05:00` : `${dayjs().subtract(5,'hour').startOf(filter).format('YYYY-MM-DD')} 00:00:00.000 -05:00`;
-    const secondDate = filter == 'day' ?`${dayjs().subtract(5,'hour').format('YYYY-MM-DD')} 23:59:59.999 -05:00` : `${dayjs().subtract(5,'hour').endOf(filter).format('YYYY-MM-DD')} 23:59:59.999 -05:00`;
+    const firstDate =
+      filter == "day"
+        ? `${dayjs()
+            .subtract(5, "hour")
+            .format("YYYY-MM-DD")} 00:00:00.000 -05:00`
+        : `${dayjs()
+            .subtract(5, "hour")
+            .startOf(filter)
+            .format("YYYY-MM-DD")} 00:00:00.000 -05:00`;
+    const secondDate =
+      filter == "day"
+        ? `${dayjs()
+            .subtract(5, "hour")
+            .format("YYYY-MM-DD")} 23:59:59.999 -05:00`
+        : `${dayjs()
+            .subtract(5, "hour")
+            .endOf(filter)
+            .format("YYYY-MM-DD")} 23:59:59.999 -05:00`;
     const conditions = {
       createdAt: {
         [Sequelize.Op.between]: [firstDate, secondDate],
       },
-     
     };
-    if(type_movement != undefined)  conditions.type_movement= type_movement
+    if (type_movement != undefined) conditions.type_movement = type_movement;
     if (id != 0) conditions.id_store = id;
-    console.log('@@@@@2',conditions);
+    console.log("@@@@@2", conditions);
     const order = await Movement.findAll({
       where: conditions,
       include: [
@@ -231,8 +251,14 @@ export const getMovementsByStore = async (id_store) => {
 };
 export const getMovementsStoreByWeek = async (id_store) => {
   try {
-    const startOfWeek =  `${dayjs().subtract(5,'hour').startOf('week').format('YYYY-MM-DD')} 00:00:00.000 -05:00`;
-    const endOfWeek = `${dayjs().subtract(5,'hour').endOf('week').format('YYYY-MM-DD')} 00:00:00.000 -05:00`;
+    const startOfWeek = `${dayjs()
+      .subtract(5, "hour")
+      .startOf("week")
+      .format("YYYY-MM-DD")} 00:00:00.000 -05:00`;
+    const endOfWeek = `${dayjs()
+      .subtract(5, "hour")
+      .endOf("week")
+      .format("YYYY-MM-DD")} 00:00:00.000 -05:00`;
     const movements = await Movement.findAll({
       where: {
         createdAt: {
@@ -519,8 +545,12 @@ export const getIncomesValues = async (req, res) => {
   try {
     const { startDate, endDate } = req.body;
     console.log("@@@ hola");
-    const firstDate = `${dayjs(startDate).format('YYYY-MM-DD')} 00:00:00.000 -05:00`;
-    const secondDate = `${dayjs(endDate).format('YYYY-MM-DD')} 23:59:59.999 -05:00`;
+    const firstDate = `${dayjs(startDate).format(
+      "YYYY-MM-DD"
+    )} 00:00:00.000 -05:00`;
+    const secondDate = `${dayjs(endDate).format(
+      "YYYY-MM-DD"
+    )} 23:59:59.999 -05:00`;
     const data = await getIncomesValue(firstDate, secondDate);
     res.status(200).json(data || []);
   } catch (error) {
@@ -531,8 +561,24 @@ export const getIncomesValues = async (req, res) => {
 export const getIncomesValuesFilter = async (req, res) => {
   try {
     const { filter } = req.params;
-    const firstDate = filter == 'day' ?`${dayjs().subtract(5,'hour').format('YYYY-MM-DD')} 00:00:00.000 -05:00` : `${dayjs().subtract(5,'hour').startOf(filter).format('YYYY-MM-DD')} 00:00:00.000 -05:00`;
-    const secondDate = filter == 'day' ?`${dayjs().subtract(5,'hour').format('YYYY-MM-DD')} 23:59:59.999 -05:00` : `${dayjs().subtract(5,'hour').endOf(filter).format('YYYY-MM-DD')} 23:59:59.999 -05:00`;
+    const firstDate =
+      filter == "day"
+        ? `${dayjs()
+            .subtract(5, "hour")
+            .format("YYYY-MM-DD")} 00:00:00.000 -05:00`
+        : `${dayjs()
+            .subtract(5, "hour")
+            .startOf(filter)
+            .format("YYYY-MM-DD")} 00:00:00.000 -05:00`;
+    const secondDate =
+      filter == "day"
+        ? `${dayjs()
+            .subtract(5, "hour")
+            .format("YYYY-MM-DD")} 23:59:59.999 -05:00`
+        : `${dayjs()
+            .subtract(5, "hour")
+            .endOf(filter)
+            .format("YYYY-MM-DD")} 23:59:59.999 -05:00`;
     console.log("firstDate", firstDate);
     console.log("secondDate", secondDate);
 
@@ -599,34 +645,23 @@ export const getIncomebyYear = async (date, id_store) => {
       ],
     });
     console.log("resss", parseQuery(incomeByYearQuarter));
-    console.log('transform data: ',transformData(parseQuery(incomeByYearQuarter)));
+    console.log(
+      "transform data: ",
+      transformData(parseQuery(incomeByYearQuarter))
+    );
     return transformData(parseQuery(incomeByYearQuarter));
   } catch (error) {
     console.log("jujuju", error);
-    throw new Error(error); 
+    throw new Error(error);
   }
 };
 
 const transformData = (data) => {
-  const result = [];
-
   // Create an array of all possible quarter-month combinations
-  const quarterMonths = [1, 2, 3, 4].flatMap((month) =>
-    [1, 2, 3, 4].map((quarter) => ({ month, quarter }))
-  );
-
-  // Loop through each quarter-month combination
-  quarterMonths.forEach(({ month, quarter }) => {
-    // Find the data object with the matching quarter and month, or create a new one with total_movement_value of 0
-    const monthData = data.find(
-      (item) => item.quarter == quarter && item.month == month
-    ) || {
-      year: data[0].year,
-      quarter,
-      month,
-      total_movement_value: 0,
-    };
-    result.push(monthData);
+  let result = templateData;
+  data.forEach((mes) => {
+    const index = result.findIndex((res) => res.month == mes.month);
+    result[index] = mes;
   });
 
   return result;
@@ -680,8 +715,8 @@ async function getMovementByHour(id_store) {
   try {
     const nowDayJs = dayjs().subtract(5, "hours");
     console.log("NOOOOOW", nowDayJs);
-    const startOfDay = `${nowDayJs.format('YYYY-MM-DD')} 00:00:00.000 -05:00`;
-    const endOfDay = `${nowDayJs.format('YYYY-MM-DD')} 23:59:59.999 -05:00`;
+    const startOfDay = `${nowDayJs.format("YYYY-MM-DD")} 00:00:00.000 -05:00`;
+    const endOfDay = `${nowDayJs.format("YYYY-MM-DD")} 23:59:59.999 -05:00`;
     console.log("startOfDay", startOfDay);
     console.log("endOfDay", endOfDay);
 
@@ -695,9 +730,8 @@ async function getMovementByHour(id_store) {
 
     console.log("conditions22", conditions);
 
-
     const movementsByHour = await Movement.findAll({
-      where: {...conditions},
+      where: { ...conditions },
     });
 
     console.log("kisss", movementsByHour);
@@ -725,9 +759,25 @@ function countMovementsByHour(movements) {
 export const getCostToChartFilter = async (req, res) => {
   try {
     const { filter, typeCost } = req.body;
-    const firstDate = filter == 'day' ?`${dayjs().subtract(5,'hour').format('YYYY-MM-DD')} 00:00:00.000 -05:00` : `${dayjs().subtract(5,'hour').startOf(filter).format('YYYY-MM-DD')} 00:00:00.000 -05:00`;
-    const secondDate = filter == 'day' ?`${dayjs().subtract(5,'hour').format('YYYY-MM-DD')} 23:59:59.999 -05:00` : `${dayjs().subtract(5,'hour').endOf(filter).format('YYYY-MM-DD')} 23:59:59.999 -05:00`;
-    
+    const firstDate =
+      filter == "day"
+        ? `${dayjs()
+            .subtract(5, "hour")
+            .format("YYYY-MM-DD")} 00:00:00.000 -05:00`
+        : `${dayjs()
+            .subtract(5, "hour")
+            .startOf(filter)
+            .format("YYYY-MM-DD")} 00:00:00.000 -05:00`;
+    const secondDate =
+      filter == "day"
+        ? `${dayjs()
+            .subtract(5, "hour")
+            .format("YYYY-MM-DD")} 23:59:59.999 -05:00`
+        : `${dayjs()
+            .subtract(5, "hour")
+            .endOf(filter)
+            .format("YYYY-MM-DD")} 23:59:59.999 -05:00`;
+
     console.log("firstDate", firstDate);
     console.log("secondDate", secondDate);
     const data = await getCostalue(firstDate, secondDate, typeCost);
@@ -740,8 +790,12 @@ export const getCostToChartFilter = async (req, res) => {
 export const getCostToChart = async (req, res) => {
   try {
     const { startDate, endDate, typeCost } = req.body;
-    const firstDate = `${dayjs(startDate).format('YYYY-MM-DD')} 00:00:00.000 -05:00`;
-    const secondDate = `${dayjs(endDate).format('YYYY-MM-DD')} 23:59:59.999 -05:00`;
+    const firstDate = `${dayjs(startDate).format(
+      "YYYY-MM-DD"
+    )} 00:00:00.000 -05:00`;
+    const secondDate = `${dayjs(endDate).format(
+      "YYYY-MM-DD"
+    )} 23:59:59.999 -05:00`;
     const data = await getCostalue(firstDate, secondDate, typeCost);
     return res.status(200).json(data);
   } catch (error) {
