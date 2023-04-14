@@ -598,12 +598,12 @@ export const getIncomebyYear = async (date, id_store) => {
         ["month", "ASC"],
       ],
     });
-    console.log("resss", incomeByYearQuarter);
-
+    console.log("resss", parseQuery(incomeByYearQuarter));
+    console.log('transform data: ',transformData(parseQuery(incomeByYearQuarter)));
     return transformData(parseQuery(incomeByYearQuarter));
   } catch (error) {
     console.log("jujuju", error);
-    throw new Error(error);
+    throw new Error(error); 
   }
 };
 
