@@ -658,7 +658,7 @@ export const getIncomebyYear = async (date, id_store) => {
 
 const transformData = (data) => {
   // Create an array of all possible quarter-month combinations
-  let result = templateData;
+  let result = [... templateData];
   data.forEach((mes) => {
     const index = result.findIndex((res) => res.month == mes.month);
     result[index] = mes;
