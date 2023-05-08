@@ -9,6 +9,7 @@ export const createMultipleStats = async ({id_store, stat_type, createdAt, quant
     const responseStatList = []
     try {
         for (let i = 0; i < quantityStats; i++) {
+            console.log('entre')
            responseStatList.push( await createStats( { id_store, stat_type, createdAt } ) )
         }
         return {success:true, errors:responseStatList.filter(resStat=>!resStat).length}
