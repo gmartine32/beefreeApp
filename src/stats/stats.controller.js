@@ -24,7 +24,7 @@ export const createStat = async (req,res) =>{
 export const createMultiStat = async (req,res) =>{
   try {
       const {id_store, stat_type, createdAt,quantityStats} = req.body
-      console.log('ENTRE AQUIII')
+      console.log('ENTRE AQUIII',{id_store, stat_type, createdAt,quantityStats})
       const response = await createMultipleStats({id_store, stat_type, createdAt,quantityStats})
       res.status(201).json({message:'stat created successfully',...response})
   } catch (error) {
