@@ -5,10 +5,11 @@ import { Store } from "../stores/store.js";
 import { Stat } from "./stats.js";
 
 export const createMultipleStats = async ({id_store, stat_type, createdAt, quantityStats}) =>{
-
+console.log('aqui2222')
+console.log({id_store, stat_type, createdAt, quantityStats})
     const responseStatList = []
     try {
-        for (let i = 0; i < quantityStats; i++) {
+        for (let i = 0; i < Number(quantityStats); i++) {
             console.log('entre')
            responseStatList.push( await createStats( { id_store, stat_type, createdAt } ) )
         }
