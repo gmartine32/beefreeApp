@@ -4,6 +4,7 @@ import { Op, Sequelize } from "sequelize";
 
 import { Store } from "../stores/store.js";
 import { Stat } from "./stats.js";
+import { createMultipleStats } from "./stats.services.js";
 
 export const createStat = async (req,res) =>{
     try {
@@ -13,19 +14,24 @@ export const createStat = async (req,res) =>{
             id_store: id_store,
             createdAt: createdAt || new Date()
         })
-
         res.status(201).json({message:'stat created successfully'})
-
     } catch (error) {
-
         console.log(error)
         res.status(500).json({message:'error creating stat'})
         
     }
-
-
 }
-
+export const createMultiStat = async (req,res) =>{
+  try {
+      const {id_store, stat_type, createdAt,quantityStats} = req.body
+      const response = await createMultipleStats({id_store, stat_type, createdAt,quantityStats})
+      res.status(201).json({message:'stat created successfully',...response})
+  } catch (error) {
+      console.log(error)
+      res.status(500).json({message:'error creating stat'})
+      
+  }
+}
 export const deleteStat = async (req, res) => {
     try {
       const { id } = req.params;

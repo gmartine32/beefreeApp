@@ -21,5 +21,5 @@ app.use(plataforms_router)
 app.use(stores_router)
 app.use(dashboard_router)
 app.use(order_router)
-app.use(stat_router)
+app.use('/stat',stat_router)
 export default app;
