@@ -742,7 +742,7 @@ async function getMovementByHour(id_store,date) {
   } catch (error) {
     console.log(error);
   }
-  // Imprimir el resultado en la consola
+
 }
 
 function countMovementsByHour(movements) {
@@ -835,5 +835,85 @@ export const getCostalue = async (startDate, endDate, typeCost) => {
     return parseQuery(response);
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const getCostalueByStore = async (startDate, endDate, typeCost, id_store) => {
+  try {
+    console.log(startDate, endDate, id_store);
+    let conditions = {
+      createdAt: {
+        [Sequelize.Op.between]: [startDate, endDate],
+      },
+      type_movement: 0,
+      description: {
+        [Op.iLike]: `%${typeCost}%`,
+      },
+    }
+
+    if(id_store != 0) conditions.id_store = id_store;
+
+    console.log('CONDITIONS',conditions);
+
+    const response = await Movement.findAll({
+      attributes: [
+        [Sequelize.fn("SUM", Sequelize.col("movement_value")), "total"]
+      ],
+      where: conditions,
+    });
+    console.log("praa", response);
+
+    return parseQuery(response);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
+export const getCostByObjectFilter = async (req, res) => {
+  try {
+    const { filter, typeCost, id_store } = req.body;
+    const firstDate =
+      filter == "day"
+        ? `${dayjs()
+            .subtract(5, "hour")
+            .format("YYYY-MM-DD")} 00:00:00.000 -05:00`
+        : `${dayjs()
+            .subtract(5, "hour")
+            .startOf(filter)
+            .format("YYYY-MM-DD")} 00:00:00.000 -05:00`;
+    const secondDate =
+      filter == "day"
+        ? `${dayjs()
+            .subtract(5, "hour")
+            .format("YYYY-MM-DD")} 23:59:59.999 -05:00`
+        : `${dayjs()
+            .subtract(5, "hour")
+            .endOf(filter)
+            .format("YYYY-MM-DD")} 23:59:59.999 -05:00`;
+
+    console.log("firstDate", firstDate);
+    console.log("secondDate", secondDate);
+    const data = await getCostalueByStore(firstDate, secondDate, typeCost, id_store);
+    return res.status(200).json(data);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: error.message });
+  }
+};
+export const getCostByObject = async (req, res) => {
+  try {
+    const { startDate, endDate, typeCost,id_store } = req.body;
+    const firstDate = `${dayjs(startDate).format(
+      "YYYY-MM-DD"
+    )} 00:00:00.000 -05:00`;
+    const secondDate = `${dayjs(endDate).format(
+      "YYYY-MM-DD"
+    )} 23:59:59.999 -05:00`;
+    const data = await getCostalueByStore(firstDate, secondDate, typeCost,id_store);
+    return res.status(200).json(data);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: error.message });
   }
 };
