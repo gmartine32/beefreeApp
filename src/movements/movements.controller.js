@@ -670,8 +670,10 @@ const transformData = (data) => {
 export const getIncomesCountTodayByHour = async (req, res) => {
   try {
     const { id_store } = req.params;
+    const queryParams = req.query;
 
-    const response = await getMovementByHour(id_store);
+
+    const response = await getMovementByHour(id_store,queryParams.date);
     console.log("RESPONSE", response);
     return res.status(200).json(response);
   } catch (error) {
@@ -711,9 +713,9 @@ const getMovementByHour1 = async (store_id) => {
     console.log(error);
   }
 };
-async function getMovementByHour(id_store) {
+async function getMovementByHour(id_store,date) {
   try {
-    const nowDayJs = dayjs().subtract(5, "hours");
+    const nowDayJs = dayjs(date)
     console.log("NOOOOOW", nowDayJs);
     const startOfDay = `${nowDayJs.format("YYYY-MM-DD")} 00:00:00.000 -05:00`;
     const endOfDay = `${nowDayJs.format("YYYY-MM-DD")} 23:59:59.999 -05:00`;
