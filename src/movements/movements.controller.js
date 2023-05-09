@@ -5,6 +5,8 @@ import moment from "moment";
 import { Op, Sequelize } from "sequelize";
 import {
   MOVEMENT_TYPE,
+  costDataObject,
+  costDataObjectDescription,
   responseMonthChart,
   templateData,
 } from "../libraries/constants/movement.constants.js";
@@ -872,7 +874,7 @@ export const getCostalueByStore = async (startDate, endDate, typeCost, id_store)
 
 export const getCostByObjectFilter = async (req, res) => {
   try {
-    const { filter, typeCost, id_store } = req.body;
+    const { filter, id_store } = req.body;
     const firstDate =
       filter == "day"
         ? `${dayjs()
@@ -894,8 +896,8 @@ export const getCostByObjectFilter = async (req, res) => {
 
     console.log("firstDate", firstDate);
     console.log("secondDate", secondDate);
-    const data = await getCostalueByStore(firstDate, secondDate, typeCost, id_store);
-    return res.status(200).json(data);
+    const responseObject = await getConceptos(firstDate,secondDate,id_store)
+    return res.status(200).json(responseObject);
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: error.message });
@@ -903,17 +905,38 @@ export const getCostByObjectFilter = async (req, res) => {
 };
 export const getCostByObject = async (req, res) => {
   try {
-    const { startDate, endDate, typeCost,id_store } = req.body;
+    const { startDate, endDate, id_store } = req.body;
     const firstDate = `${dayjs(startDate).format(
       "YYYY-MM-DD"
     )} 00:00:00.000 -05:00`;
     const secondDate = `${dayjs(endDate).format(
       "YYYY-MM-DD"
     )} 23:59:59.999 -05:00`;
-    const data = await getCostalueByStore(firstDate, secondDate, typeCost,id_store);
-    return res.status(200).json(data);
+    const responseObject = await getConceptos(firstDate,secondDate,id_store)
+    return res.status(200).json(responseObject);
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: error.message });
   }
 };
+
+const getConceptos = async (firstDate, secondDate,id_store)=>{
+  try {
+    let resObject = {...costDataObject}
+    const listing = await getCostalueByStore(firstDate, secondDate, costDataObjectDescription.listinFees,id_store);
+    const transaction = await getCostalueByStore(firstDate, secondDate, costDataObjectDescription.transactionFees,id_store);
+    const proccesing = await getCostalueByStore(firstDate, secondDate, costDataObjectDescription.processingFees,id_store);
+    const etsyAds = await getCostalueByStore(firstDate, secondDate, costDataObjectDescription.etsyAds,id_store);
+    const offsiteAds = await getCostalueByStore(firstDate, secondDate, costDataObjectDescription.offsiteAds,id_store);
+    const saleTax = await getCostalueByStore(firstDate, secondDate, costDataObjectDescription.saleTax,id_store);
+    resObject.listinFees = listing[0].total || 0;
+    resObject.transactionFees = transaction[0].total || 0;
+    resObject.transactionFees = proccesing[0].total || 0;
+    resObject.etsyAds = etsyAds[0].total || 0;
+    resObject.offsiteAds = offsiteAds[0].total ||0;
+    resObject.saleTax = saleTax[0].total || 0;
+    return  resObject
+  } catch (error) {
+    return costDataObject
+  }
+}

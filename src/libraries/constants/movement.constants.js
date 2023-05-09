@@ -157,3 +157,22 @@ export const templateData = [
       total_movement_value: 0,
     },
   ];
+
+
+  export const costDataObject = {
+    listinFees:0,
+    transactionFees:0,
+    processingFees:0,
+    etsyAds:0,
+    offsiteAds:0,
+    saleTax:0  
+  }
+
+  export const costDataObjectDescription = {
+    listinFees:'listing',
+    transactionFees:'transaction',
+    processingFees:'processing',
+    etsyAds:'etsy ads',
+    offsiteAds:'offsite',
+    saleTax:'sale tax'  
+  }
