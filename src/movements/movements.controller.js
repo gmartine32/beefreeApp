@@ -842,7 +842,7 @@ export const getCostalue = async (startDate, endDate, typeCost) => {
 
 export const getCostalueByStore = async (startDate, endDate, typeCost, id_store) => {
   try {
-    console.log(startDate, endDate, id_store);
+    console.log('---------------FILTROS-------------',startDate, endDate, id_store);
     let conditions = {
       createdAt: {
         [Sequelize.Op.between]: [startDate, endDate],
@@ -856,6 +856,7 @@ export const getCostalueByStore = async (startDate, endDate, typeCost, id_store)
     if(id_store != 0) conditions.id_store = id_store;
 
     console.log('CONDITIONS',conditions);
+    console.log('---------------FIN-------------');
 
     const response = await Movement.findAll({
       attributes: [
@@ -929,9 +930,15 @@ const getConceptos = async (firstDate, secondDate,id_store)=>{
     const etsyAds = await getCostalueByStore(firstDate, secondDate, costDataObjectDescription.etsyAds,id_store);
     const offsiteAds = await getCostalueByStore(firstDate, secondDate, costDataObjectDescription.offsiteAds,id_store);
     const saleTax = await getCostalueByStore(firstDate, secondDate, costDataObjectDescription.saleTax,id_store);
+    console.log('1',listing[0].total);
+    console.log('2',transaction[0].total);
+    console.log('3',proccesing[0].total);
+    console.log('4',etsyAds[0].total);
+    console.log('5',offsiteAds[0].total);
+    console.log('6',saleTax[0].total);
     resObject.listinFees = listing[0].total || 0;
     resObject.transactionFees = transaction[0].total || 0;
-    resObject.transactionFees = proccesing[0].total || 0;
+    resObject.processingFees = proccesing[0].total || 0;
     resObject.etsyAds = etsyAds[0].total || 0;
     resObject.offsiteAds = offsiteAds[0].total ||0;
     resObject.saleTax = saleTax[0].total || 0;
