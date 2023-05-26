@@ -4,7 +4,7 @@ const netprofit_router = Router();
 
 
 netprofit_router.post('/netprofit',createNewNetProfit)
-netprofit_router.get('/netprofit/customDate',getNetProfitCustomRange)
-netprofit_router.get('/netprofit/:filter',getNetProfitCustomRange)
+netprofit_router.post('/netprofit/customDate',getNetProfitCustomRange)
+netprofit_router.post('/netprofit/:filter',getNetProfitCustomRange)
 
 export default netprofit_router
