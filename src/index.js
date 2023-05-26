@@ -10,6 +10,7 @@ import './stores/store.js'
 import './movements/movement.js'
 import './orders/order.js'
 import './stats/stats.js'
+import './netprofit/netprofit.js'
 import dayjs from "dayjs";
 import moment from "moment";
 
