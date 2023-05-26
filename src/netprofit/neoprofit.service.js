@@ -5,6 +5,8 @@ import dayjs from "dayjs";
 
 export const createNetProfit = async ({ id_store, value, date }) => {
   try {
+    console.log('creating',{ id_store, value, date })
+    console.log('date',dayjs(date).startOf('day').toDate() || dayjs().startOf('day').toDate())
     await NetProfit.create({
       valor: value,
       id_store: id_store,
@@ -46,6 +48,7 @@ export const findNetProfits = async (startDate, endDate, id_store = 0) => {
     if (id_store != 0) {
       conditions.id_store = id_store;
     }
+    console.log("conditions", conditions);
     const netProfits = await NetProfit.findAll({
       where: conditions,
     });
