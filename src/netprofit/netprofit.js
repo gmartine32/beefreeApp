@@ -9,7 +9,7 @@ export const NetProfit = sequelize.define("netprofit", {
     autoIncrement: true
   },
   date_netprofit: {
-    type: DataTypes.DATEONLY,
+    type: DataTypes.DATE,
     allowNull: false,
     unique: "store_date_netprofit_constraint"
   },

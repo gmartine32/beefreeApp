@@ -1,13 +1,14 @@
 import { parseQuery } from "../libraries/tools/sql.tools.js";
 import { NetProfit } from "./netprofit.js";
 import { Op } from "sequelize";
+import dayjs from "dayjs";
 
 export const createNetProfit = async ({ id_store, value, date }) => {
   try {
     await NetProfit.create({
       valor: value,
       id_store: id_store,
-      date_netprofit: date || new Date(),
+      date_netprofit: dayjs(date).startOf('day').toDate() || dayjs().startOf('day').toDate(),
     });
     return true;
   } catch (error) {
