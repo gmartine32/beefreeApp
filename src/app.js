@@ -8,6 +8,8 @@ import plataforms_router from './plataforms/plataforms.routes.js';
 import stores_router from './stores/stores.routes.js'
 import order_router from './orders/order.router.js';
 import stat_router from './stats/stat.routes.js';
+import netprofit_router from './netprofit/netprofit.routes.js'
+
 
 
 
@@ -22,4 +24,5 @@ app.use(stores_router)
 app.use(dashboard_router)
 app.use(order_router)
 app.use('/stat',stat_router)
+app.use(netprofit_router)
 export default app;

@@ -1,7 +1,8 @@
-import { parseQuery } from "../libraries/tools/sql.tools";
-import { NetProfit } from "./netprofit";
+import { parseQuery } from "../libraries/tools/sql.tools.js";
+import { NetProfit } from "./netprofit.js";
+import { Op } from "sequelize";
 
-const createNetProfit = async ({ id_store, value, date }) => {
+export const createNetProfit = async ({ id_store, value, date }) => {
   try {
     await NetProfit.create({
       valor: value,
@@ -15,7 +16,7 @@ const createNetProfit = async ({ id_store, value, date }) => {
   }
 };
 
-const editNetProfit = async (netProfit) => {
+export const editNetProfit = async (netProfit) => {
   try {
     const np = await NetProfit.findByPk(netProfit.id);
     if (!np) {
@@ -53,4 +54,6 @@ export const findNetProfits = async (startDate, endDate, id_store = 0) => {
     return [];
   }
 };
+
+
 
