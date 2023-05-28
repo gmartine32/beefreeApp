@@ -29,8 +29,9 @@ export const getNetProfitCustomRange = async (req, res) => {
 
 export const getNetProfitFilter = async (req, res) => {
     try {
-        const { id_store} = req.body
-        const {filter} = req.params
+        const { id_store } = req.body
+        const { filter } = req.params
+        console.log('FILTER:', filter)
         const firstDate = filter == 'day' ?`${dayjs().subtract(5,'hour').format('YYYY-MM-DD')} 00:00:00.000 -05:00` : `${dayjs().subtract(5,'hour').startOf(filter).format('YYYY-MM-DD')} 00:00:00.000 -05:00`;
         const secondDate = filter == 'day' ?`${dayjs().subtract(5,'hour').format('YYYY-MM-DD')} 23:59:59.999 -05:00` : `${dayjs().subtract(5,'hour').endOf(filter).format('YYYY-MM-DD')} 23:59:59.999 -05:00`;
         const response  = await findNetProfits(firstDate,secondDate,id_store)
