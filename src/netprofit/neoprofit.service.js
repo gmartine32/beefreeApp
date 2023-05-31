@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 export const createNetProfit = async ({ id_store, value, date }) => {
   try {
     console.log('creating',{ id_store, value, date })
-    console.log('date',dayjs(date).startOf('day').toDate() || dayjs().startOf('day').toDate())
+    console.log('date',dayjs(date).startOf('day').toISOString() || dayjs().startOf('day').toDate())
     await NetProfit.create({
       valor: value,
       id_store: id_store,
