@@ -1,4 +1,4 @@
-import { createNetProfit, editNetProfit, findNetProfits } from "./neoprofit.service.js"
+import { createNetProfit, deleteNetProfitById, editNetProfit, findNetProfits } from "./neoprofit.service.js"
 import dayjs from "dayjs"
 
 export const createNewNetProfit = async (req,res) =>{
@@ -60,3 +60,12 @@ try {
 }
 }
 
+export const deleteNetProfit = async (req, res) => {
+    try {
+        const {id} = req.params
+        const response = deleteNetProfitById(id)
+        res.status(200).send({message:'deleted success'})
+    } catch (error) {
+        res.status(500).send({message:'error critical deleting success'})
+    }
+}

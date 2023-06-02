@@ -63,5 +63,15 @@ export const findNetProfits = async (startDate, endDate, id_store = 0) => {
   }
 };
 
+export const deleteNetProfitById = async (id) =>{
+  try {
+    const netProfit = await NetProfit.findByPk(id)
+    if(!netProfit) throw new Error("netProfit not exist");
+    const response = await NetProfit.destroy({where:{id}})
+    return parseQuery(response)
+  } catch (error) {
+    throw new Error(error);
+  }
+}
 
 
