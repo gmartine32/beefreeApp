@@ -1,4 +1,4 @@
-import { createNetProfit, findNetProfits } from "./neoprofit.service.js"
+import { createNetProfit, editNetProfit, findNetProfits } from "./neoprofit.service.js"
 import dayjs from "dayjs"
 
 export const createNewNetProfit = async (req,res) =>{
@@ -41,5 +41,22 @@ export const getNetProfitFilter = async (req, res) => {
         console.log(error)
         return res.status(500).send(error)
     }
+}
+
+export const editNetProfits = async (req, res) =>{
+try {
+    const {id} = req.params
+    const success = await editNetProfit({id})
+    if(success){
+        res.status(200).send({message:'edit successfully'})
+    }else{
+        res.status(200).send({message:'edit failed'})
+
+    }
+} catch (error) {
+    console.log(error)
+    res.status(500).send({message:'critical error editing netprofit'})
+    
+}
 }
 
