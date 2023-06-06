@@ -46,7 +46,8 @@ export const getNetProfitFilter = async (req, res) => {
 export const editNetProfits = async (req, res) =>{
 try {
     const {id} = req.params
-    const success = await editNetProfit({id})
+    const {body} = req.body
+    const success = await editNetProfit({...body,id})
     if(success){
         res.status(200).send({message:'edit successfully'})
     }else{
