@@ -33,6 +33,7 @@ export const createNetProfit = async ({ id_store, value, date }) => {
 
 export const editNetProfit = async (netProfit) => {
   try {
+    console.log("OK::", netProfit);
     const np = await NetProfit.findByPk(netProfit.id);
     if (!np) {
       throw new Error("netProfit not found");
