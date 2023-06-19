@@ -11,7 +11,6 @@ export const NetProfit = sequelize.define("netprofit", {
   date_netprofit: {
     type: DataTypes.DATE,
     allowNull: false,
-    unique: "store_date_netprofit_constraint"
   },
   valor: {
     type: DataTypes.FLOAT,
@@ -21,5 +20,4 @@ export const NetProfit = sequelize.define("netprofit", {
 
 NetProfit.belongsTo(Store, {
   foreignKey: "id_store",
-  unique: "store_date_netprofit_constraint"
 });

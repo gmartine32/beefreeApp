@@ -1,6 +1,6 @@
 import { parseQuery } from "../libraries/tools/sql.tools.js";
 import { NetProfit } from "./netprofit.js";
-import { Op } from "sequelize";
+import { Op, Sequelize} from "sequelize";
 import dayjs from "dayjs";
 
 export const createNetProfit = async ({ id_store, value, date }) => {
@@ -51,8 +51,7 @@ export const findNetProfits = async (startDate, endDate, id_store = 0) => {
   try {
     const conditions = {
       date_netprofit: {
-        [Op.gte]: startDate,
-        [Op.lte]: endDate,
+        [Sequelize.Op.between]: [startDate, endDate],
       },
     };
     if (id_store != 0) {
