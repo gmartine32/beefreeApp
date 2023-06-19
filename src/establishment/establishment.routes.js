@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createEstablishmentController, deleteEstablishmentController, editEstablishmentController, getAllEstablishmentsController, getEstablishmentByIdController } from "./establishment.controller";
+import { createEstablishmentController, deleteEstablishmentController, editEstablishmentController, getAllEstablishmentsController, getEstablishmentByIdController } from "./establishment.controller.js";
 
 const establishment_router = Router();
 
