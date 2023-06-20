@@ -321,8 +321,8 @@ export const getMovementsStoreToday = async (id_store) => {
 
 export const getIncomesValuesByWeek = async () => {
   try {
-    const startOfWeek = moment().startOf("week").toDate();
-    const endOfWeek = moment().endOf("week").toDate();
+    const startOfWeek = moment().startOf("week").format("YYYY-MM-DD");
+    const endOfWeek = moment().endOf("week").format("YYYY-MM-DD");
 
     const values = await Movement.findAll({
       where: {
