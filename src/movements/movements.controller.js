@@ -324,6 +324,10 @@ export const getIncomesValuesByWeek = async () => {
     const startOfWeek = moment().startOf("week").format("YYYY-MM-DD");
     const endOfWeek = moment().endOf("week").format("YYYY-MM-DD");
 
+    console.log('startOfWeek', startOfWeek)
+    console.log('endOfWeek', endOfWeek)
+    
+
     const values = await Movement.findAll({
       where: {
         createdAt: {
