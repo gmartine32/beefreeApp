@@ -344,8 +344,11 @@ export const getIncomesValuesByWeek = async () => {
       group: [Sequelize.fn("date_part", "dow", Sequelize.col("createdAt"))],
       raw: true,
     });
+    console.log("--------------------------------");
+    console.log("values:", values);
+    console.log("--------------------------------");
 
-    return values;
+    return parseQuery(values);
   } catch (error) {
     console.error(error);
     return [];
@@ -660,7 +663,7 @@ export const getIncomebyYear = async (date, id_store) => {
 
 const transformData = (data) => {
   // Create an array of all possible quarter-month combinations
-  let result = [... templateData];
+  let result = [...templateData];
   data.forEach((mes) => {
     const index = result.findIndex((res) => res.month == mes.month);
     result[index] = mes;
@@ -674,8 +677,7 @@ export const getIncomesCountTodayByHour = async (req, res) => {
     const { id_store } = req.params;
     const queryParams = req.query;
 
-
-    const response = await getMovementByHour(id_store,queryParams.date);
+    const response = await getMovementByHour(id_store, queryParams.date);
     console.log("RESPONSE", response);
     return res.status(200).json(response);
   } catch (error) {
@@ -715,9 +717,9 @@ const getMovementByHour1 = async (store_id) => {
     console.log(error);
   }
 };
-async function getMovementByHour(id_store,date) {
+async function getMovementByHour(id_store, date) {
   try {
-    const nowDayJs = dayjs(date)
+    const nowDayJs = dayjs(date);
     console.log("NOOOOOW", nowDayJs);
     const startOfDay = `${nowDayJs.format("YYYY-MM-DD")} 00:00:00.000 -05:00`;
     const endOfDay = `${nowDayJs.format("YYYY-MM-DD")} 23:59:59.999 -05:00`;
@@ -744,7 +746,6 @@ async function getMovementByHour(id_store,date) {
   } catch (error) {
     console.log(error);
   }
-
 }
 
 function countMovementsByHour(movements) {
@@ -840,9 +841,19 @@ export const getCostalue = async (startDate, endDate, typeCost) => {
   }
 };
 
-export const getCostalueByStore = async (startDate, endDate, typeCost, id_store) => {
+export const getCostalueByStore = async (
+  startDate,
+  endDate,
+  typeCost,
+  id_store
+) => {
   try {
-    console.log('---------------FILTROS-------------',startDate, endDate, id_store);
+    console.log(
+      "---------------FILTROS-------------",
+      startDate,
+      endDate,
+      id_store
+    );
     let conditions = {
       createdAt: {
         [Sequelize.Op.between]: [startDate, endDate],
@@ -851,16 +862,16 @@ export const getCostalueByStore = async (startDate, endDate, typeCost, id_store)
       description: {
         [Op.iLike]: `%${typeCost}%`,
       },
-    }
+    };
 
-    if(id_store != 0) conditions.id_store = id_store;
+    if (id_store != 0) conditions.id_store = id_store;
 
-    console.log('CONDITIONS',conditions);
-    console.log('---------------FIN-------------');
+    console.log("CONDITIONS", conditions);
+    console.log("---------------FIN-------------");
 
     const response = await Movement.findAll({
       attributes: [
-        [Sequelize.fn("SUM", Sequelize.col("movement_value")), "total"]
+        [Sequelize.fn("SUM", Sequelize.col("movement_value")), "total"],
       ],
       where: conditions,
     });
@@ -871,7 +882,6 @@ export const getCostalueByStore = async (startDate, endDate, typeCost, id_store)
     console.log(error);
   }
 };
-
 
 export const getCostByObjectFilter = async (req, res) => {
   try {
@@ -897,7 +907,7 @@ export const getCostByObjectFilter = async (req, res) => {
 
     console.log("firstDate", firstDate);
     console.log("secondDate", secondDate);
-    const responseObject = await getConceptos(firstDate,secondDate,id_store)
+    const responseObject = await getConceptos(firstDate, secondDate, id_store);
     return res.status(200).json(responseObject);
   } catch (error) {
     console.log(error);
@@ -913,7 +923,7 @@ export const getCostByObject = async (req, res) => {
     const secondDate = `${dayjs(endDate).format(
       "YYYY-MM-DD"
     )} 23:59:59.999 -05:00`;
-    const responseObject = await getConceptos(firstDate,secondDate,id_store)
+    const responseObject = await getConceptos(firstDate, secondDate, id_store);
     return res.status(200).json(responseObject);
   } catch (error) {
     console.log(error);
@@ -921,29 +931,59 @@ export const getCostByObject = async (req, res) => {
   }
 };
 
-const getConceptos = async (firstDate, secondDate,id_store)=>{
+const getConceptos = async (firstDate, secondDate, id_store) => {
   try {
-    let resObject = {...costDataObject}
-    const listing = await getCostalueByStore(firstDate, secondDate, costDataObjectDescription.listinFees,id_store);
-    const transaction = await getCostalueByStore(firstDate, secondDate, costDataObjectDescription.transactionFees,id_store);
-    const proccesing = await getCostalueByStore(firstDate, secondDate, costDataObjectDescription.processingFees,id_store);
-    const etsyAds = await getCostalueByStore(firstDate, secondDate, costDataObjectDescription.etsyAds,id_store);
-    const offsiteAds = await getCostalueByStore(firstDate, secondDate, costDataObjectDescription.offsiteAds,id_store);
-    const saleTax = await getCostalueByStore(firstDate, secondDate, costDataObjectDescription.saleTax,id_store);
-    console.log('1',listing[0].total);
-    console.log('2',transaction[0].total);
-    console.log('3',proccesing[0].total);
-    console.log('4',etsyAds[0].total);
-    console.log('5',offsiteAds[0].total);
-    console.log('6',saleTax[0].total);
+    let resObject = { ...costDataObject };
+    const listing = await getCostalueByStore(
+      firstDate,
+      secondDate,
+      costDataObjectDescription.listinFees,
+      id_store
+    );
+    const transaction = await getCostalueByStore(
+      firstDate,
+      secondDate,
+      costDataObjectDescription.transactionFees,
+      id_store
+    );
+    const proccesing = await getCostalueByStore(
+      firstDate,
+      secondDate,
+      costDataObjectDescription.processingFees,
+      id_store
+    );
+    const etsyAds = await getCostalueByStore(
+      firstDate,
+      secondDate,
+      costDataObjectDescription.etsyAds,
+      id_store
+    );
+    const offsiteAds = await getCostalueByStore(
+      firstDate,
+      secondDate,
+      costDataObjectDescription.offsiteAds,
+      id_store
+    );
+    const saleTax = await getCostalueByStore(
+      firstDate,
+      secondDate,
+      costDataObjectDescription.saleTax,
+      id_store
+    );
+    console.log("1", listing[0].total);
+    console.log("2", transaction[0].total);
+    console.log("3", proccesing[0].total);
+    console.log("4", etsyAds[0].total);
+    console.log("5", offsiteAds[0].total);
+    console.log("6", saleTax[0].total);
     resObject.listinFees = listing[0].total || 0;
     resObject.transactionFees = transaction[0].total || 0;
     resObject.processingFees = proccesing[0].total || 0;
     resObject.etsyAds = etsyAds[0].total || 0;
-    resObject.offsiteAds = offsiteAds[0].total ||0;
+    resObject.offsiteAds = offsiteAds[0].total || 0;
     resObject.saleTax = saleTax[0].total || 0;
-    return  resObject
+    return resObject;
   } catch (error) {
-    return costDataObject
+    return costDataObject;
   }
-}
+};

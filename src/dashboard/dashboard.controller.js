@@ -90,6 +90,9 @@ export const getIncomeChartDataWeek = async (req, res) => {
   
   const newResponse = [...responseWeekChart]
   data.forEach((res)=>newResponse[res.dayOfWeek]={"movementValueSum":res.movementValueSum, "dayOfWeek":res.dayOfWeek})
+console.log('--------------------------------')
+console.log('final value: ',newResponse)
+console.log('--------------------------------')
 
   return newResponse
 
