@@ -331,7 +331,8 @@ export const getIncomesValuesByWeek = async () => {
     const values = await Movement.findAll({
       where: {
         createdAt: {
-          [Sequelize.Op.between]: [startOfWeek, endOfWeek],
+          [Sequelize.Op.between]: [Sequelize.literal(`DATE('${startOfWeek}')`),
+          Sequelize.literal(`DATE('${endOfWeek}')`),],
         },
         type_movement: MOVEMENT_TYPE.INCOME,
       },
