@@ -21,7 +21,7 @@ export const createNetProfit = async ({ id_store, value, date }) => {
       valor: value,
       id_store: id_store,
       date_netprofit:
-        dayjs(date).startOf("day").toISOString() ||
+        new Date(date) ||
         dayjs().startOf("day").toDate(),
     });
     return true;
