@@ -12,6 +12,7 @@ order_router.delete('/order/:id',deleteOrder)
 order_router.post('/order/store/cities/:id',getDataOrderByCityRangeDate)
 order_router.get('/order/store/cities/:id/:filter',getDataOrderByCityFilter)
 order_router.post('/order/store/states/:id',getOrderStateByStore)
+order_router.post('/order/consolidated/',getOrderStateByStore)
 order_router.get('/order/store/states/:id/:filter',getDataStateByCityFilter)
 
 

@@ -17,7 +17,6 @@ export const createOrders = async (order) => {
     throw new Error(error);
   }
 };
-
 export const getAllOrders = async () => {
   try {
     const response = await Order.findAll({
@@ -28,7 +27,6 @@ export const getAllOrders = async () => {
         },
       ],
     });
-
     return parseQuery(response);
   } catch (error) {
     throw new Error(error);
@@ -267,5 +265,41 @@ const getOrderByStates = async (conditions) =>{
     return parseQuery(response);
   } catch (error) {
     
+  }
+}
+
+
+export async function getGroupedOrders({id_store}) {
+  try {
+    const groupedOrders = await Order.findAll({
+      attributes: [
+        "sale_date",
+        [Sequelize.fn("LOWER", Sequelize.col("ship_city")), "ship_city"],
+        "ship_state",
+        "ship_country",
+        [Sequelize.fn("SUM", Sequelize.col("item_total")), "total"],
+      ],
+      group: ["sale_date", "ship_city", "ship_state", "ship_country"],
+      order: [["sale_date", "ASC"]],
+      where:{
+        id_store:id_store,
+      }
+    });
+
+    // Mapear los resultados a un formato personalizado con las propiedades solicitadas
+    const formattedResults = groupedOrders.map((order) => ({
+      ship_date: order.sale_date,
+      ship_city: order.ship_city,
+      ship_state: order.ship_state,
+      ship_country: order.ship_country,
+      total: order.total,
+    }));
+    console.log('-----------orderrr----------------');
+    console.log(formattedResults);
+
+    return formattedResults;
+  } catch (error) {
+    console.error("Error al obtener los datos:", error);
+    throw error;
   }
 }

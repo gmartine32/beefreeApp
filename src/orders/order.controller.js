@@ -1,5 +1,5 @@
 
-import { createOrders, deleteOrderById, gerOrderByStore, getAllOrders, getDataCitiesByStoreFilter, getDataOrderCityRangeDate, getOrderById, getOrderByStoreOnFilter, getOrderByStoreRangeDate, getOrderStateAtRangeDate, getStatesByStoreFilter } from "./order.services.js";
+import { createOrders, deleteOrderById, gerOrderByStore, getAllOrders, getDataCitiesByStoreFilter, getDataOrderCityRangeDate, getGroupedOrders, getOrderById, getOrderByStoreOnFilter, getOrderByStoreRangeDate, getOrderStateAtRangeDate, getStatesByStoreFilter } from "./order.services.js";
 
 export const createOrder = async (req, res) => {
     try {
@@ -127,5 +127,17 @@ export const deleteOrder = async (req, res) => {
     } catch (error) {
         console.log(error)
         res.status(500).json({error: 'error getting cities'})
+    }
+  }
+
+  export const getOrderConsolidatedByStore = async (req, res)=>{
+    try {
+        const {id_store} = req.body
+        const response = await getGroupedOrders({id_store})
+        return res.status(200).json(response)
+         
+    } catch (error) {
+        res.status(500).json({error: 'error getting cities'})
+        
     }
   }
