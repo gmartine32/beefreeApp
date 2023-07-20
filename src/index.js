@@ -12,6 +12,7 @@ import './orders/order.js'
 import './stats/stats.js'
 import './netprofit/netprofit.js'
 import './establishment/establishment.js'
+import './listEstablishment/listEstablishment.js'
 import dayjs from "dayjs";
 import moment from "moment";
 
