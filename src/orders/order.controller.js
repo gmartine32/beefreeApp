@@ -1,5 +1,5 @@
 
-import { createOrders, deleteOrderById, gerOrderByStore, getAllOrders, getDataCitiesByStoreFilter, getDataOrderCityRangeDate, getGroupedOrders, getOrderById, getOrderByStoreOnFilter, getOrderByStoreRangeDate, getOrderStateAtRangeDate, getStatesByStoreFilter } from "./order.services.js";
+import { createOrders, deleteOrderById, gerOrderByStore, getAllOrders, getConsolidadoByCountryFilter, getConsolidadoFilter, getConsolidatedOrderByCountryCustomRange, getConsolidatedOrderCustomRange, getDataCitiesByStoreFilter, getDataOrderCityRangeDate, getOrderById, getOrderByStoreOnFilter, getOrderByStoreRangeDate, getOrderStateAtRangeDate, getStatesByStoreFilter } from "./order.services.js";
 
 export const createOrder = async (req, res) => {
     try {
@@ -132,12 +132,55 @@ export const deleteOrder = async (req, res) => {
 
   export const getOrderConsolidatedByStore = async (req, res)=>{
     try {
-        const {id_store} = req.body
-        const response = await getGroupedOrders({id_store})
+        const {id_store, startDate, endDate} = req.body
+        const firstDate = startDate
+        const secondDate = endDate
+        const response = await  getConsolidatedOrderCustomRange({id_store,firstDate,secondDate})
         return res.status(200).json(response)
          
     } catch (error) {
-        res.status(500).json({error: 'error getting cities'})
+        res.status(500).json({error: 'error getting uuuu'})
         
     }
   }
+
+  export const getOrderConsolidatedByStoreFilter = async (req, res)=>{
+    try {
+        const {id_store, filter} = req.body
+        const response = await  getConsolidadoFilter({id_store,filter})
+        return res.status(200).json(response)
+         
+    } catch (error) {
+        res.status(500).json({error: 'error getting uuuu'})
+        
+    }
+  }
+
+
+  export const getOrderConsolidatedCountryByStore = async (req, res)=>{
+    try {
+        const {id_store, startDate, endDate} = req.body
+        const firstDate = startDate
+        const secondDate = endDate
+        const response = await  getConsolidatedOrderByCountryCustomRange({id_store,firstDate,secondDate})
+        return res.status(200).json(response)
+         
+    } catch (error) {
+        res.status(500).json({error: 'error getting uuuu'})
+        
+    }
+  }
+
+  export const getOrderConsolidatedCountryByStoreFilter = async (req, res)=>{
+    try {
+        const {id_store, filter} = req.body
+        const response = await  getConsolidadoByCountryFilter({id_store,filter})
+        return res.status(200).json(response)
+         
+    } catch (error) {
+        res.status(500).json({error: 'error getting uuuu'})
+        
+    }
+  }
+  
+  

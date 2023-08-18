@@ -1,6 +1,5 @@
 import axios from "axios";
 import dayjs from "dayjs";
-import moment from "moment";
 import { Op, Sequelize } from "sequelize";
 import { parseQuery } from "../libraries/tools/sql.tools.js";
 
@@ -71,7 +70,7 @@ export const gerOrderByStore = async (id_store) => {
   }
 };
 
-export const getOrderByStoreRangeDate = async (id_store,startDate,endDate) => {
+export const getOrderByStoreRangeDate = async (id_store, startDate, endDate) => {
   try {
     const firstDate = `${dayjs(startDate).format('YYYY-MM-DD')} 00:00:00.000 -05:00`;
     const secondDate = `${dayjs(endDate).format('YYYY-MM-DD')} 23:59:59.999 -05:00`;
@@ -81,7 +80,7 @@ export const getOrderByStoreRangeDate = async (id_store,startDate,endDate) => {
       },
     };
     if (id_store != 0) conditions.id_store = id_store;
-    console.log('conditions',conditions)
+    console.log('conditions', conditions)
     const response = await Order.findAll({
       where: conditions,
       include: [
@@ -99,8 +98,8 @@ export const getOrderByStoreRangeDate = async (id_store,startDate,endDate) => {
 
 export const getOrderByStoreOnFilter = async (id_store, filter) => {
   try {
-    const firstDate = filter == 'day' ?`${dayjs().subtract(5,'hour').format('YYYY-MM-DD')} 00:00:00.000 -05:00` : `${dayjs().subtract(5,'hour').startOf(filter).format('YYYY-MM-DD')} 00:00:00.000 -05:00`;
-    const secondDate = filter == 'day' ?`${dayjs().subtract(5,'hour').format('YYYY-MM-DD')} 23:59:59.999 -05:00` : `${dayjs().subtract(5,'hour').endOf(filter).format('YYYY-MM-DD')} 23:59:59.999 -05:00`;
+    const firstDate = filter == 'day' ? `${dayjs().subtract(5, 'hour').format('YYYY-MM-DD')} 00:00:00.000 -05:00` : `${dayjs().subtract(5, 'hour').startOf(filter).format('YYYY-MM-DD')} 00:00:00.000 -05:00`;
+    const secondDate = filter == 'day' ? `${dayjs().subtract(5, 'hour').format('YYYY-MM-DD')} 23:59:59.999 -05:00` : `${dayjs().subtract(5, 'hour').endOf(filter).format('YYYY-MM-DD')} 23:59:59.999 -05:00`;
 
     const conditions = {
       sale_date: {
@@ -108,7 +107,7 @@ export const getOrderByStoreOnFilter = async (id_store, filter) => {
       },
     };
     if (id_store != 0) conditions.id_store = id_store;
-    console.log('ordr conditions',conditions)
+    console.log('ordr conditions', conditions)
     const response = await Order.findAll({
       where: conditions,
       include: [
@@ -156,7 +155,7 @@ export const getDataOrderCityRangeDate = async (
   try {
     const orders = await getOrderByStoreRangeDate(id_store, startDate, endDate);
 
-    const filteredOrders = orders.map(order =>({...order,ship_state:order.ship_country != 'United States' ? '':order.ship_state}));
+    const filteredOrders = orders.map(order => ({ ...order, ship_state: order.ship_country != 'United States' ? '' : order.ship_state }));
     const cities = filteredOrders.map((order) => `${order.ship_state}`);
     const coordenadas = await getDataOrderCity(cities);
     return coordenadas;
@@ -174,8 +173,8 @@ export const getDataOrderCity = async (cityNames) => {
       cantidad: cityNames.filter((c) => c === ciudad).length,
     }));
     const promesas = ciudadesUnicas.map((ciudad) => {
-      if (ciudad.trim()=='') return {ciudad:'other cities',latitud:0,longitud:0}
-      const params = { q: ciudad+'+United States', key: '2b9ad2046e204c76be82323feef37df9' };
+      if (ciudad.trim() == '') return { ciudad: 'other cities', latitud: 0, longitud: 0 }
+      const params = { q: ciudad + '+United States', key: '2b9ad2046e204c76be82323feef37df9' };
       console.log(url)
       console.log(params)
       return axios.get(url, { params }).then((response) => {
@@ -190,10 +189,10 @@ export const getDataOrderCity = async (cityNames) => {
     await Promise.allSettled(promesas).then((coordenadas) => {
       // Combina los datos de cantidad y coordenadas para crear el array de JSONs final
 
-      console.log('aaaa',coordenadas)
+      console.log('aaaa', coordenadas)
       const resultados = conteosCiudades.map((ciudad) => {
         const { nombre, cantidad } = ciudad;
-        const { value } = coordenadas.find((c) => c.value.ciudad === (nombre == '' ? 'other cities':nombre));
+        const { value } = coordenadas.find((c) => c.value.ciudad === (nombre == '' ? 'other cities' : nombre));
         return {
           ciudad: nombre,
           cantidad,
@@ -206,14 +205,14 @@ export const getDataOrderCity = async (cityNames) => {
   } catch (error) {
     console.log(error);
     throw new Error(error);
-    
+
   }
 };
 
-export const getOrderStateAtRangeDate = async (id_store,startDate,endDate) => {
+export const getOrderStateAtRangeDate = async (id_store, startDate, endDate) => {
   try {
-  const firstDate = `${dayjs(startDate).format('YYYY-MM-DD')} 00:00:00.000 -05:00`;
-    const secondDate =`${dayjs(endDate).format('YYYY-MM-DD')} 23:59:59.999 -05:00`;
+    const firstDate = `${dayjs(startDate).format('YYYY-MM-DD')} 00:00:00.000 -05:00`;
+    const secondDate = `${dayjs(endDate).format('YYYY-MM-DD')} 23:59:59.999 -05:00`;
     let conditions = {
       sale_date: {
         [Sequelize.Op.between]: [firstDate, secondDate],
@@ -230,8 +229,8 @@ export const getOrderStateAtRangeDate = async (id_store,startDate,endDate) => {
 export const getStatesByStoreFilter = async (id_store, filter) => {
   try {
 
-    const firstDate = filter == 'day' ?`${dayjs().subtract(5,'hour').format('YYYY-MM-DD')} 00:00:00.000 -05:00` : dayjs().subtract(5,'hour').startOf(filter).toDate();
-    const secondDate = filter == 'day' ?`${dayjs().subtract(5,'hour').format('YYYY-MM-DD')} 23:59:59.999 -05:00` : dayjs().subtract(5,'hour').endOf(filter).toDate();
+    const firstDate = filter == 'day' ? `${dayjs().subtract(5, 'hour').format('YYYY-MM-DD')} 00:00:00.000 -05:00` : dayjs().subtract(5, 'hour').startOf(filter).toDate();
+    const secondDate = filter == 'day' ? `${dayjs().subtract(5, 'hour').format('YYYY-MM-DD')} 23:59:59.999 -05:00` : dayjs().subtract(5, 'hour').endOf(filter).toDate();
 
 
     let conditions = {
@@ -241,7 +240,7 @@ export const getStatesByStoreFilter = async (id_store, filter) => {
     };
     if (id_store != 0) conditions.id_store = id_store;
     const orders = await getOrderByStates(conditions)
-    console.log('@@',orders)
+    console.log('@@', orders)
     return orders
   } catch (error) {
     throw new Error(error);
@@ -249,7 +248,7 @@ export const getStatesByStoreFilter = async (id_store, filter) => {
 };
 
 
-const getOrderByStates = async (conditions) =>{
+const getOrderByStates = async (conditions) => {
   try {
     const response = await Order.findAll({
       where: conditions,
@@ -264,26 +263,33 @@ const getOrderByStates = async (conditions) =>{
 
     return parseQuery(response);
   } catch (error) {
-    
+
   }
 }
 
 
-export async function getGroupedOrders({id_store}) {
+
+export async function getGroupedOrders({ id_store, startDate, endDate }) {
   try {
+    const condition = {
+      sale_date: {
+        [Sequelize.Op.between]: [startDate, endDate],
+      }
+    }
+    if (id_store) {
+      condition.id_store = id_store
+    }
     const groupedOrders = await Order.findAll({
       attributes: [
         "sale_date",
         [Sequelize.fn("LOWER", Sequelize.col("ship_city")), "ship_city"],
         "ship_state",
         "ship_country",
-        [Sequelize.fn("SUM", Sequelize.col("item_total")), "total"],
+        [Sequelize.literal("SUM(item_total)"), "total"],
       ],
       group: ["sale_date", "ship_city", "ship_state", "ship_country"],
       order: [["sale_date", "ASC"]],
-      where:{
-        id_store:id_store,
-      }
+      where: condition
     });
 
     // Mapear los resultados a un formato personalizado con las propiedades solicitadas
@@ -292,14 +298,113 @@ export async function getGroupedOrders({id_store}) {
       ship_city: order.ship_city,
       ship_state: order.ship_state,
       ship_country: order.ship_country,
-      total: order.total,
+      total: order.dataValues.total, // Acceder al valor calculado de la suma
     }));
+
     console.log('-----------orderrr----------------');
     console.log(formattedResults);
 
-    return formattedResults;
+    return parseQuery(formattedResults);
   } catch (error) {
     console.error("Error al obtener los datos:", error);
     throw error;
+  }
+}
+
+
+export const getConsolidatedOrderCustomRange = async ({ id_store, firstDate, secondDate }) => {
+  try {
+    const startDate = `${dayjs(firstDate).format('YYYY-MM-DD')} 00:00:00.000 -05:00`;
+    const endDate = `${dayjs(secondDate).format('YYYY-MM-DD')} 23:59:59.999 -05:00`;
+    const report = await getGroupedOrders({
+      id_store, startDate, endDate
+    })
+    return report
+
+  } catch (error) {
+    console.log('ERROR;', error)
+    return []
+  }
+}
+
+export const getConsolidadoFilter = async ({ id_store, filter }) => {
+  try {
+    const startDate = filter == 'day' ? `${dayjs().subtract(5, 'hour').format('YYYY-MM-DD')} 00:00:00.000 -05:00` : dayjs().subtract(5, 'hour').startOf(filter).toDate();
+    const endDate = filter == 'day' ? `${dayjs().subtract(5, 'hour').format('YYYY-MM-DD')} 23:59:59.999 -05:00` : dayjs().subtract(5, 'hour').endOf(filter).toDate();
+    const report = await getGroupedOrders({
+      id_store, startDate, endDate
+    })
+    return report
+
+  } catch (error) {
+    console.log('ERROR;', error)
+    return []
+  }
+}
+
+export const getOrderByCountry = async ({ startDate, endDate, id_store }) => {
+  try {
+    const condition = {
+      sale_date: {
+        [Sequelize.Op.between]: [startDate, endDate],
+      }
+    }
+    if (id_store) {
+      condition.id_store = id_store
+    }
+
+    const groupedOrders = await Order.findAll({
+      attributes: [
+        [Sequelize.fn("LOWER", Sequelize.col("ship_country")), "country"],
+        [Sequelize.literal("COUNT(*)"), "orders"],
+        [Sequelize.literal("SUM(item_total)"), "total"],
+      ],
+      group: ["ship_country"],
+      where: condition
+
+    });
+
+    // Mapear los resultados a un formato personalizado con las propiedades solicitadas
+    const formattedResults = groupedOrders.map((order) => ({
+      country: order.dataValues.country,
+      orders: order.dataValues.orders,
+      total: order.dataValues.total,
+    }));
+
+    return parseQuery(formattedResults);
+  } catch (error) {
+    console.error("Error al obtener los datos:", error);
+    throw error;
+  }
+}
+
+
+export const getConsolidatedOrderByCountryCustomRange = async ({ id_store, firstDate, secondDate }) => {
+  try {
+    const startDate = `${dayjs(firstDate).format('YYYY-MM-DD')} 00:00:00.000 -05:00`;
+    const endDate = `${dayjs(secondDate).format('YYYY-MM-DD')} 23:59:59.999 -05:00`;
+    const report = await getOrderByCountry({
+      id_store, startDate, endDate
+    })
+    return report
+
+  } catch (error) {
+    console.log('ERROR;', error)
+    return []
+  }
+}
+
+export const getConsolidadoByCountryFilter = async ({ id_store, filter }) => {
+  try {
+    const startDate = filter == 'day' ? `${dayjs().subtract(5, 'hour').format('YYYY-MM-DD')} 00:00:00.000 -05:00` : dayjs().subtract(5, 'hour').startOf(filter).toDate();
+    const endDate = filter == 'day' ? `${dayjs().subtract(5, 'hour').format('YYYY-MM-DD')} 23:59:59.999 -05:00` : dayjs().subtract(5, 'hour').endOf(filter).toDate();
+    const report = await getOrderByCountry({
+      id_store, startDate, endDate
+    })
+    return report
+
+  } catch (error) {
+    console.log('ERROR;', error)
+    return []
   }
 }
