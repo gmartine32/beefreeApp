@@ -975,6 +975,18 @@ const getConceptos = async (firstDate, secondDate, id_store) => {
       costDataObjectDescription.saleTax,
       id_store
     );
+    const salesRefunds = await getCostalueByStore(
+      firstDate,
+      secondDate,
+      costDataObjectDescription.salesRefunds,
+      id_store
+    );
+    const saleTaxBuyer = await getCostalueByStore(
+      firstDate,
+      secondDate,
+      costDataObjectDescription.saleTaxBuyer,
+      id_store
+    );
     console.log("1", listing[0].total);
     console.log("2", transaction[0].total);
     console.log("3", proccesing[0].total);
@@ -987,6 +999,8 @@ const getConceptos = async (firstDate, secondDate, id_store) => {
     resObject.etsyAds = etsyAds[0].total || 0;
     resObject.offsiteAds = offsiteAds[0].total || 0;
     resObject.saleTax = saleTax[0].total || 0;
+    resObject.saleTaxBuyer = saleTaxBuyer[0].total || 0;
+    resObject.salesRefunds = salesRefunds[0].total || 0
     return resObject;
   } catch (error) {
     return costDataObject;

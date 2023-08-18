@@ -165,7 +165,10 @@ export const templateData = [
     processingFees:0,
     etsyAds:0,
     offsiteAds:0,
-    saleTax:0  
+    saleTax:0,
+    saleTaxBuyer:0,
+    salesRefunds:0
+
   }
 
   export const costDataObjectDescription = {
@@ -174,5 +177,7 @@ export const templateData = [
     processingFees:'processing',
     etsyAds:'etsy ads',
     offsiteAds:'offsite',
-    saleTax:'sale tax'  
+    saleTax:'sale tax',
+    saleTaxBuyes:'Sales tax buyer',
+    salesRefunds:'Sales refunds'
   }
