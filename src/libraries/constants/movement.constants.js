@@ -178,6 +178,6 @@ export const templateData = [
     etsyAds:'etsy ads',
     offsiteAds:'offsite',
     saleTax:'sale tax',
-    saleTaxBuyes:'Sales tax buyer',
+    saleTaxBuyer:'Sales tax buyer',
     salesRefunds:'Sales refunds'
   }
